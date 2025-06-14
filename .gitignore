@@ -1,0 +1,38 @@
+# Node modules
+node_modules/
+
+# Build output
+.next/
+out/
+dist/
+
+# Environment variables
+.env*
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE and misc
+.idea/
+.vscode/
+*.tgz
+
+# Coverage
+coverage/
+
+# TypeScript
+*.tsbuildinfo
+
+# Test
+coverage/
+
+# Others
+package-lock.json 
