@@ -206,7 +206,7 @@ export default function AdminPage() {
 
   const handlePaymentStatusChange = async (bookingId: number, newStatus: PaymentStatus) => {
     try {
-      const response = await api.patch(`/admin/bookings/${bookingId}/payment-status`, { status: newStatus });
+      const response = await api.patch(`/admin/bookings/${bookingId}/payment-status`, { paymentStatus: newStatus });
       setBookings(prevBookings =>
         prevBookings.map(booking =>
           booking.id === bookingId ? { ...booking, paymentStatus: newStatus } : booking
