@@ -12,23 +12,24 @@ export default function TripFilters({ onFilterChange }: Props) {
     maxPrice: undefined,
     startDate: '',
     endDate: '',
-    difficulty: undefined,
     searchQuery: '',
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    const newFilters = {
+    setFilters(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    onFilterChange({
       ...filters,
-      [name]: value === '' ? undefined : 
-        (name === 'minPrice' || name === 'maxPrice') ? Number(value) : value
-    };
-    setFilters(newFilters);
-    onFilterChange(newFilters);
+      [name]: value
+    });
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md mb-8">
+    <div className="bg-white p-6 rounded-lg shadow-md">
+      <h3 className="text-lg font-semibold text-gray-900 mb-4">Filter Trips</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -56,23 +57,6 @@ export default function TripFilters({ onFilterChange }: Props) {
             placeholder="Enter location"
             className="block w-full rounded-lg border border-primary-500 bg-white px-4 py-2 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-600 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
           />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Difficulty Level
-          </label>
-          <select
-            name="difficulty"
-            value={filters.difficulty || ''}
-            onChange={handleChange}
-            className="block w-full rounded-lg border border-primary-500 bg-white px-4 py-2 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-600 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
-          >
-            <option value="">All Levels</option>
-            <option value="easy">Easy</option>
-            <option value="moderate">Moderate</option>
-            <option value="challenging">Challenging</option>
-          </select>
         </div>
 
         <div>
