@@ -9,7 +9,7 @@ export interface Trip {
   startDate: string;
   duration: number;
   imageUrl?: string;
-  destinationId?: number;
+  destinationId?: number | null;
   createdAt: string;
   updatedAt: string;
 }

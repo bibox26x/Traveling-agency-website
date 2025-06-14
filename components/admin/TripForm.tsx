@@ -43,16 +43,26 @@ export default function TripForm({ trip, destinations = [], onSubmit, onCancel }
       return;
     }
 
-    await onSubmit(formData);
+    // Convert numeric fields
+    const submissionData = {
+      ...formData,
+      price: Number(formData.price),
+      duration: Number(formData.duration),
+      destinationId: formData.destinationId ? Number(formData.destinationId) : null
+    };
+
+    await onSubmit(submissionData);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: name === 'price' || name === 'duration' || name === 'destinationId'
-        ? Number(value) 
-        : value
+      [name]: name === 'price' || name === 'duration'
+        ? Number(value)
+        : name === 'destinationId'
+          ? value === '' ? null : Number(value)
+          : value
     }));
   };
 
@@ -110,7 +120,7 @@ export default function TripForm({ trip, destinations = [], onSubmit, onCancel }
         <select
           name="destinationId"
           id="destinationId"
-          value={formData.destinationId || ''}
+          value={formData.destinationId === null ? '' : formData.destinationId || ''}
             onChange={handleChange}
           className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
         >
