@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { clsx } from 'clsx';
+import { useTranslation } from 'next-i18next';
 
 interface CardProps {
   title: string;
@@ -25,6 +26,8 @@ export default function Card({
   href,
   className,
 }: CardProps) {
+  const { t } = useTranslation('common');
+
   return (
     <Link
       href={href}
@@ -42,7 +45,7 @@ export default function Card({
         />
         {price && (
           <div className="absolute right-4 top-4 rounded-full bg-white px-4 py-2 text-sm font-semibold text-primary-900 shadow-md">
-            From ${price}
+            {t('common.fromPrice', { price })}
           </div>
         )}
       </div>
@@ -51,7 +54,7 @@ export default function Card({
           <h3 className="text-xl font-semibold text-primary-900">{title}</h3>
           {duration && (
             <p className="mt-1 text-sm text-primary-600">
-              <span className="font-medium">{duration}</span> duration
+              <span className="font-medium">{duration}</span> {t('common.duration')}
             </p>
           )}
           <p className="mt-3 text-base text-gray-600 line-clamp-2">{description}</p>
@@ -79,7 +82,7 @@ export default function Card({
               ))}
             </div>
             <p className="ml-2 text-sm text-gray-600">
-              {rating.toFixed(1)} out of 5 stars
+              {t('common.rating', { rating: rating.toFixed(1) })}
             </p>
           </div>
         )}

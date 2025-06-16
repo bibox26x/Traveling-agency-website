@@ -1,9 +1,13 @@
-import { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../../components/layout/Layout';
 import PaymentForm from '../../components/payment/PaymentForm';
 import { fetchWithAuth } from '../../utils/fetchWithAuth';
 import Head from 'next/head';
+import { useAuth } from '../../context/AuthContext';
+import { useTranslation } from 'next-i18next';
+import { GetStaticProps } from 'next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 interface Payment {
   id: number;
@@ -32,28 +36,34 @@ interface Booking {
 }
 
 export default function BookingDetails() {
+  const router = useRouter();
+  const { id } = router.query;
+  const { t } = useTranslation('common');
   const [booking, setBooking] = useState<Booking | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const router = useRouter();
-  const { id } = router.query;
 
   useEffect(() => {
     if (id) {
-      fetchBooking();
+      fetchBookingDetails();
     }
   }, [id]);
 
-  const fetchBooking = async () => {
+  const fetchBookingDetails = async () => {
     try {
       const response = await fetchWithAuth(`/bookings/${id}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch booking details');
+      const { data } = response;
+      
+      if (response.status >= 400) {
+        throw new Error(data.error || data.message || t('errors.fetchBookingDetails'));
       }
-      const data = await response.json();
+
       setBooking(data);
+      setError('');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch booking details');
+      console.error('Fetch booking details error:', err);
+      setError(err instanceof Error ? err.message : t('errors.fetchBookingDetails'));
+      setBooking(null);
     } finally {
       setLoading(false);
     }
@@ -78,7 +88,7 @@ export default function BookingDetails() {
   return (
     <Layout>
       <Head>
-        <title>Booking Details - Travel Agency</title>
+        <title>{t('bookings.bookingDetails')} - {t('common.brand')}</title>
       </Head>
 
       <div className="py-10">
@@ -90,8 +100,9 @@ export default function BookingDetails() {
           )}
 
           {loading ? (
-            <div className="flex justify-center">
+            <div className="flex justify-center items-center">
               <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-primary-500"></div>
+              <span className="ml-3 text-gray-600">{t('pages.bookings.loading')}</span>
             </div>
           ) : booking ? (
             <div className="space-y-8">
@@ -99,44 +110,36 @@ export default function BookingDetails() {
               <div className="bg-white shadow overflow-hidden sm:rounded-lg">
                 <div className="px-4 py-5 sm:px-6">
                   <h3 className="text-lg leading-6 font-medium text-gray-900">
-                    Booking Details
+                    {t('bookings.bookingDetails')}
                   </h3>
                 </div>
                 <div className="border-t border-gray-200 px-4 py-5 sm:px-6">
                   <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
                     <div className="sm:col-span-2">
-                      <dt className="text-sm font-medium text-gray-500">Trip</dt>
+                      <dt className="text-sm font-medium text-gray-500">{t('bookings.details.tripName')}</dt>
                       <dd className="mt-1 text-sm text-gray-900">{booking.trip.title}</dd>
                     </div>
                     <div>
-                      <dt className="text-sm font-medium text-gray-500">Location</dt>
+                      <dt className="text-sm font-medium text-gray-500">{t('bookings.details.location')}</dt>
                       <dd className="mt-1 text-sm text-gray-900">{booking.trip.location}</dd>
                     </div>
                     <div>
-                      <dt className="text-sm font-medium text-gray-500">Dates</dt>
+                      <dt className="text-sm font-medium text-gray-500">{t('bookings.travelDate')}</dt>
                       <dd className="mt-1 text-sm text-gray-900">
                         {new Date(booking.trip.start_date).toLocaleDateString()} - {new Date(booking.trip.end_date).toLocaleDateString()}
                       </dd>
                     </div>
                     <div>
-                      <dt className="text-sm font-medium text-gray-500">Guests</dt>
+                      <dt className="text-sm font-medium text-gray-500">{t('bookings.passengers')}</dt>
                       <dd className="mt-1 text-sm text-gray-900">{booking.guests}</dd>
                     </div>
                     <div>
-                      <dt className="text-sm font-medium text-gray-500">Total Price</dt>
+                      <dt className="text-sm font-medium text-gray-500">{t('bookings.totalPrice')}</dt>
                       <dd className="mt-1 text-sm text-gray-900">${booking.total_price.toFixed(2)}</dd>
                     </div>
                     <div>
-                      <dt className="text-sm font-medium text-gray-500">Status</dt>
-                      <dd className="mt-1 text-sm text-gray-900">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          booking.status === 'confirmed'
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-yellow-100 text-yellow-800'
-                        }`}>
-                          {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
-                        </span>
-                      </dd>
+                      <dt className="text-sm font-medium text-gray-500">{t('bookings.bookingStatus')}</dt>
+                      <dd className="mt-1 text-sm text-gray-900">{t(`bookings.status.${booking.status}`)}</dd>
                     </div>
                   </dl>
                 </div>
@@ -147,73 +150,28 @@ export default function BookingDetails() {
                 <div className="bg-white shadow sm:rounded-lg">
                   <div className="px-4 py-5 sm:px-6">
                     <h3 className="text-lg leading-6 font-medium text-gray-900">
-                      Payment Status
-                    </h3>
-                    <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
-                      <div className="bg-gray-50 p-4 rounded-lg">
-                        <dt className="text-sm font-medium text-gray-500">Total Price</dt>
-                        <dd className="mt-1 text-lg font-semibold text-gray-900">
-                          ${booking.total_price.toFixed(2)}
-                        </dd>
-                      </div>
-                      <div className="bg-gray-50 p-4 rounded-lg">
-                        <dt className="text-sm font-medium text-gray-500">Paid Amount</dt>
-                        <dd className="mt-1 text-lg font-semibold text-green-600">
-                          ${paymentStatus.totalPaid.toFixed(2)}
-                        </dd>
-                      </div>
-                      <div className="bg-gray-50 p-4 rounded-lg">
-                        <dt className="text-sm font-medium text-gray-500">Remaining Amount</dt>
-                        <dd className="mt-1 text-lg font-semibold text-primary-600">
-                          ${paymentStatus.remainingAmount.toFixed(2)}
-                        </dd>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Payment History */}
-              {booking.payments.length > 0 && (
-                <div className="bg-white shadow sm:rounded-lg">
-                  <div className="px-4 py-5 sm:px-6">
-                    <h3 className="text-lg leading-6 font-medium text-gray-900">
-                      Payment History
+                      {t('bookings.details.paymentInfo.title')}
                     </h3>
                   </div>
-                  <div className="border-t border-gray-200">
-                    <ul role="list" className="divide-y divide-gray-200">
-                      {booking.payments.map((payment) => (
-                        <li key={payment.id} className="px-4 py-4 sm:px-6">
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <p className="text-sm font-medium text-gray-900">
-                                ${payment.amount.toFixed(2)} - {payment.paymentMethod}
-                              </p>
-                              <p className="text-sm text-gray-500">
-                                {new Date(payment.createdAt).toLocaleDateString()}
-                              </p>
-                            </div>
-                            <div>
-                              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                payment.status === 'confirmed'
-                                  ? 'bg-green-100 text-green-800'
-                                  : payment.status === 'rejected'
-                                  ? 'bg-red-100 text-red-800'
-                                  : 'bg-yellow-100 text-yellow-800'
-                              }`}>
-                                {payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}
-                              </span>
-                            </div>
-                          </div>
-                          {payment.adminNote && (
-                            <p className="mt-2 text-sm text-gray-500">
-                              Note: {payment.adminNote}
-                            </p>
-                          )}
-                        </li>
-                      ))}
-                    </ul>
+                  <div className="border-t border-gray-200 px-4 py-5 sm:px-6">
+                    <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
+                      <div>
+                        <dt className="text-sm font-medium text-gray-500">{t('bookings.details.paymentInfo.totalPaid')}</dt>
+                        <dd className="mt-1 text-sm text-gray-900">${paymentStatus.totalPaid.toFixed(2)}</dd>
+                      </div>
+                      {!paymentStatus.isFullyPaid && (
+                        <div>
+                          <dt className="text-sm font-medium text-gray-500">{t('bookings.details.paymentInfo.remaining')}</dt>
+                          <dd className="mt-1 text-sm text-gray-900">${paymentStatus.remainingAmount.toFixed(2)}</dd>
+                        </div>
+                      )}
+                      {paymentStatus.isFullyPaid && (
+                        <div>
+                          <dt className="text-sm font-medium text-gray-500">{t('bookings.details.paymentInfo.fullyPaid')}</dt>
+                          <dd className="mt-1 text-sm text-gray-900">✓</dd>
+                        </div>
+                      )}
+                    </dl>
                   </div>
                 </div>
               )}
@@ -223,26 +181,41 @@ export default function BookingDetails() {
                 <div className="bg-white shadow sm:rounded-lg">
                   <div className="px-4 py-5 sm:px-6">
                     <h3 className="text-lg leading-6 font-medium text-gray-900">
-                      Make a Payment
+                      {t('pages.bookings.payment.title')}
                     </h3>
                   </div>
                   <div className="border-t border-gray-200">
                     <PaymentForm
                       bookingId={booking.id}
                       amount={paymentStatus.remainingAmount}
-                      onSuccess={fetchBooking}
+                      onSuccess={fetchBookingDetails}
                     />
                   </div>
                 </div>
               )}
             </div>
           ) : (
-            <div className="text-center text-gray-500">
-              Booking not found
+            <div className="text-center py-12">
+              <p className="text-gray-500">{t('bookings.notFound')}</p>
             </div>
           )}
         </div>
       </div>
     </Layout>
   );
+}
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale || 'en', ['common'])),
+    },
+  };
+};
+
+export async function getStaticPaths() {
+  return {
+    paths: [],
+    fallback: true,
+  };
 } 

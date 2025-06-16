@@ -1,18 +1,40 @@
 import { useRouter } from 'next/router';
 import React from 'react';
+import { useAuth } from '../context/AuthContext';
 
-export default function ProtectedRoute({ children, adminOnly = false }: { children: React.ReactNode; adminOnly?: boolean }) {
+interface ProtectedRouteProps {
+  children: React.ReactNode;
+  adminOnly?: boolean;
+  publicRoute?: boolean;
+}
+
+export default function ProtectedRoute({ children, adminOnly = false, publicRoute = false }: ProtectedRouteProps) {
   const router = useRouter();
+  const { user, loading } = useAuth();
+
   React.useEffect(() => {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-    // In a real app, decode token or fetch user role
-    if (!token) {
-      router.replace('/login');
-    } else if (adminOnly) {
-      // TODO: Replace with real admin check
-      const isAdmin = false;
-      if (!isAdmin) router.replace('/');
+    if (!loading) {
+      if (!publicRoute && !user) {
+        // Redirect to login for protected routes when not authenticated
+        const redirect = router.pathname !== '/' ? `?redirect=${router.pathname}` : '';
+        router.replace(`/login${redirect}`);
+      } else if (adminOnly && (!user || user.role !== 'ADMIN')) {
+        // Redirect non-admin users from admin-only routes
+        router.replace('/');
+      }
     }
-  }, [router, adminOnly]);
-  return <>{children}</>;
+  }, [router, user, loading, adminOnly, publicRoute]);
+
+  // Show nothing while checking authentication
+  if (loading) {
+    return null;
+  }
+
+  // For public routes or authenticated users, render the children
+  if (publicRoute || user) {
+    return <>{children}</>;
+  }
+
+  // Show nothing while redirecting
+  return null;
 }

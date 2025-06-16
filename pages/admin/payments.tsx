@@ -39,10 +39,10 @@ export default function AdminPayments() {
   const fetchPayments = async () => {
     try {
       const response = await fetchWithAuth('/api/admin/payments');
-      if (!response.ok) {
+      const { data } = response;
+      if (response.status >= 400) {
         throw new Error('Failed to fetch payments');
       }
-      const data = await response.json();
       setPayments(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch payments');
@@ -61,7 +61,8 @@ export default function AdminPayments() {
         body: JSON.stringify({ status, adminNote }),
       });
 
-      if (!response.ok) {
+      const { data } = response;
+      if (response.status >= 400) {
         throw new Error('Failed to update payment status');
       }
 

@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode, useRef } from 'react';
 import { auth } from '../services/api';
 import { useRouter } from 'next/router';
 
@@ -6,7 +6,7 @@ interface User {
   id: number;
   name: string;
   email: string;
-  role: string;  // Changed from 'USER' | 'ADMIN' to allow any case
+  role: string;
 }
 
 interface AuthContextType {
@@ -21,133 +21,206 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Token refresh cooldown period (2 minutes - less than the 5-minute token expiry)
-const REFRESH_COOLDOWN = 2 * 60 * 1000;
+// Token refresh cooldown period (14 minutes - just before the 15-minute access token expiry)
+const REFRESH_COOLDOWN = 14 * 60 * 1000;
+
+// Public routes that don't require authentication
+const PUBLIC_ROUTES = ['/', '/login', '/register', '/about', '/destinations', '/trips'];
+
+// Add refresh lock
+let isRefreshing = false;
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [lastRefresh, setLastRefresh] = useState<number>(0);
-  const [rememberMe, setRememberMe] = useState<boolean>(false);
   const router = useRouter();
+  
+  // Add refs to track auth state
+  const isAuthenticating = useRef(false);
+  const refreshTimeout = useRef<NodeJS.Timeout>();
+  const mounted = useRef(true);
+
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      if (refreshTimeout.current) {
+        clearTimeout(refreshTimeout.current);
+      }
+    };
+  }, []);
+
+  const isPublicRoute = (path: string) => {
+    return PUBLIC_ROUTES.some(route => 
+      path === route || 
+      path.startsWith(`${route}/`) ||
+      // Handle dynamic routes
+      (route !== '/' && path.match(new RegExp(`^${route}/[^/]+$`)))
+    );
+  };
+
+  const handleLogout = async (silent: boolean = false) => {
+    // Prevent multiple logout attempts and check if mounted
+    if (!mounted.current) return;
+    
+    // Clear refresh timeout immediately
+    if (refreshTimeout.current) {
+      clearTimeout(refreshTimeout.current);
+      refreshTimeout.current = undefined;
+    }
+
+    try {
+      // Make the logout request first
+      await auth.logout();
+      
+      // Then clear the state
+      setUser(null);
+      setLastRefresh(0);
+      isRefreshing = false; // Reset the refresh lock
+      
+      // Only redirect if not silent and not on a public route
+      if (!silent && !isPublicRoute(router.pathname)) {
+        const currentPath = router.pathname;
+        const redirect = currentPath !== '/' ? `?redirect=${currentPath}` : '';
+        router.replace(`/login${redirect}`);
+      }
+    } catch (error) {
+      console.error('Logout failed:', error);
+      // Still clear state even if the API call fails
+      setUser(null);
+      setLastRefresh(0);
+      isRefreshing = false;
+      
+      // Still redirect if not silent
+      if (!silent && !isPublicRoute(router.pathname)) {
+        const currentPath = router.pathname;
+        const redirect = currentPath !== '/' ? `?redirect=${currentPath}` : '';
+        router.replace(`/login${redirect}`);
+      }
+    }
+  };
 
   // Initial auth check
   useEffect(() => {
     const initAuth = async () => {
+      if (isAuthenticating.current) return;
+      isAuthenticating.current = true;
+
       try {
-        await checkAuth();
+        console.log('Initializing auth check for path:', router.pathname);
+        
+        // Always check auth status first
+        try {
+          const statusResponse = await auth.checkAuth();
+          if (statusResponse.user && mounted.current) {
+            setUser(statusResponse.user);
+            setLastRefresh(Date.now());
+            console.log('Found existing session:', statusResponse.user);
+            return;
+          }
+        } catch (statusError) {
+          console.log('No valid session found, trying refresh');
+          
+          // Only try refresh token if not on a public route
+          if (!isPublicRoute(router.pathname)) {
+            try {
+              const response = await auth.refreshToken();
+              if (response.user && mounted.current) {
+                setUser(response.user);
+                setLastRefresh(Date.now());
+                console.log('Restored session via refresh:', response.user);
+              }
+            } catch (error) {
+              console.log('No valid session found');
+              await handleLogout(true); // Silent logout
+            }
+          }
+        }
       } catch (error) {
         console.error('Initial auth check failed:', error);
+        await handleLogout(true); // Silent logout
       } finally {
-        setLoading(false);
+        isAuthenticating.current = false;
+        if (mounted.current) {
+          setLoading(false);
+        }
       }
     };
 
     initAuth();
-  }, []);
+  }, [router.pathname]);
 
   // Set up periodic token refresh
   useEffect(() => {
-    if (!user) return;
-
-    const refreshInterval = setInterval(async () => {
-      try {
-        await checkAuth();
-      } catch (error) {
-        console.error('Periodic refresh failed:', error);
+    if (!user) {
+      if (refreshTimeout.current) {
+        clearTimeout(refreshTimeout.current);
       }
-    }, REFRESH_COOLDOWN);
+      return;
+    }
 
-    return () => clearInterval(refreshInterval);
-  }, [user]);
+    const scheduleRefresh = () => {
+      if (refreshTimeout.current) {
+        clearTimeout(refreshTimeout.current);
+      }
+
+      // Schedule refresh for 1 minute before token expiry
+      const REFRESH_MARGIN = 60000; // 1 minute
+      const nextRefresh = REFRESH_COOLDOWN - REFRESH_MARGIN;
+
+      refreshTimeout.current = setTimeout(async () => {
+        if (!mounted.current || !user) return;
+
+        try {
+          if (!isPublicRoute(router.pathname)) {
+            await checkAuth();
+          }
+          scheduleRefresh(); // Schedule next refresh only if still mounted and authenticated
+        } catch (error) {
+          console.error('Periodic refresh failed:', error);
+        }
+      }, nextRefresh);
+    };
+
+    scheduleRefresh();
+
+    return () => {
+      if (refreshTimeout.current) {
+        clearTimeout(refreshTimeout.current);
+      }
+    };
+  }, [user, router.pathname]);
 
   const checkAuth = async () => {
+    if (isRefreshing || isAuthenticating.current || !mounted.current) return;
+    isRefreshing = true;
+
     try {
-      const token = localStorage.getItem('accessToken');
-      const userData = localStorage.getItem('user');
-      const rememberedState = localStorage.getItem('rememberMe');
-
-      if (!token || !userData) {
-        await handleLogout();
-        return;
-      }
-
-      // Check if we need to refresh the token
       const now = Date.now();
-      const shouldRefresh = now - lastRefresh >= REFRESH_COOLDOWN;
-
-      if (shouldRefresh) {
-        try {
-          const response = await auth.refreshToken(rememberedState === 'true');
-          if (response.accessToken) {
-            localStorage.setItem('accessToken', response.accessToken);
-            if (response.user) {
-              localStorage.setItem('user', JSON.stringify(response.user));
-              setUser(response.user);
-            }
-            setLastRefresh(now);
-          } else {
-            throw new Error('No access token in refresh response');
-          }
-        } catch (error) {
-          console.error('Token refresh failed:', error);
-          await handleLogout();
-          throw error;
-        }
-      } else {
-        // Parse and validate user data
-        try {
-          const parsedUser = JSON.parse(userData);
-          if (parsedUser && parsedUser.id && parsedUser.role) {
-            setUser(parsedUser);
-            setRememberMe(rememberedState === 'true');
-          } else {
-            throw new Error('Invalid user data');
-          }
-        } catch (e) {
-          console.error('Invalid user data in localStorage:', e);
-          await handleLogout();
-          throw e;
+      if (now - lastRefresh >= REFRESH_COOLDOWN) {
+        const response = await auth.refreshToken();
+        if (response.user && mounted.current) {
+          setUser(response.user);
+          setLastRefresh(now);
+        } else {
+          await handleLogout(true); // Silent logout
         }
       }
     } catch (error) {
       console.error('Auth check failed:', error);
-      await handleLogout();
-      throw error;
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      await auth.logout();
-    } catch (error) {
-      console.error('Logout failed:', error);
+      await handleLogout(true); // Silent logout
     } finally {
-      setUser(null);
-      setLastRefresh(0);
-      setRememberMe(false);
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('user');
-      localStorage.removeItem('rememberMe');
-      
-      // Only redirect to login if we're not already there and not on the home page
-      if (!router.pathname.includes('/login') && router.pathname !== '/') {
-        const redirect = router.pathname !== '/' ? `?redirect=${router.pathname}` : '';
-        router.push(`/login${redirect}`);
-      }
+      isRefreshing = false;
     }
   };
 
   const login = async (email: string, password: string, remember: boolean = false) => {
     try {
       setError(null);
-      const { accessToken, user } = await auth.login(email, password, remember);
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('user', JSON.stringify(user));
-      localStorage.setItem('rememberMe', String(remember));
-      setUser(user);
-      setRememberMe(remember);
+      const response = await auth.login(email, password, remember);
+      setUser(response.user);
       setLastRefresh(Date.now());
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || error.message || 'Login failed';
@@ -159,12 +232,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const register = async (name: string, email: string, password: string, remember: boolean = false) => {
     try {
       setError(null);
-      const { accessToken, user } = await auth.register(name, email, password, remember);
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('user', JSON.stringify(user));
-      localStorage.setItem('rememberMe', String(remember));
-      setUser(user);
-      setRememberMe(remember);
+      const response = await auth.register(name, email, password, remember);
+      setUser(response.user);
       setLastRefresh(Date.now());
     } catch (error: any) {
       console.error('Registration error:', error);
@@ -199,11 +268,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     clearError
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

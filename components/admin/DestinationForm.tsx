@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'next-i18next';
 import { Destination } from '../../types/destination';
 
 interface DestinationFormProps {
@@ -12,6 +13,7 @@ const DestinationForm: React.FC<DestinationFormProps> = ({
   onSubmit,
   onCancel
 }) => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     name: initialData?.name || '',
     description: initialData?.description || '',
@@ -38,7 +40,7 @@ const DestinationForm: React.FC<DestinationFormProps> = ({
     try {
       await onSubmit(formData);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to save destination');
+      setError(err instanceof Error ? err.message : t('admin.forms.destination.errors.save'));
     } finally {
       setLoading(false);
     }
@@ -54,7 +56,7 @@ const DestinationForm: React.FC<DestinationFormProps> = ({
 
       <div>
         <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-          Name
+          {t('admin.forms.destination.name')}
         </label>
         <input
           type="text"
@@ -64,13 +66,13 @@ const DestinationForm: React.FC<DestinationFormProps> = ({
           onChange={handleChange}
           required
           className="form-input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-gray-900 bg-white"
-          placeholder="Enter destination name"
+          placeholder={t('admin.forms.destination.placeholders.name')}
         />
       </div>
 
       <div>
         <label htmlFor="country" className="block text-sm font-medium text-gray-700">
-          Country
+          {t('admin.forms.destination.country')}
         </label>
         <input
           type="text"
@@ -80,13 +82,13 @@ const DestinationForm: React.FC<DestinationFormProps> = ({
           onChange={handleChange}
           required
           className="form-input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-gray-900 bg-white"
-          placeholder="Enter country name"
+          placeholder={t('admin.forms.destination.placeholders.country')}
         />
       </div>
 
       <div>
         <label htmlFor="imageUrl" className="block text-sm font-medium text-gray-700">
-          Image URL
+          {t('admin.forms.destination.imageUrl')}
         </label>
         <input
           type="url"
@@ -96,13 +98,13 @@ const DestinationForm: React.FC<DestinationFormProps> = ({
           onChange={handleChange}
           required
           className="form-input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-gray-900 bg-white"
-          placeholder="Enter image URL"
+          placeholder={t('admin.forms.destination.placeholders.imageUrl')}
         />
       </div>
 
       <div>
         <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-          Description
+          {t('admin.forms.destination.description')}
         </label>
         <textarea
           id="description"
@@ -112,7 +114,7 @@ const DestinationForm: React.FC<DestinationFormProps> = ({
           required
           rows={4}
           className="form-textarea mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-gray-900 bg-white"
-          placeholder="Enter destination description"
+          placeholder={t('admin.forms.destination.placeholders.description')}
         />
       </div>
 
@@ -122,14 +124,14 @@ const DestinationForm: React.FC<DestinationFormProps> = ({
           onClick={onCancel}
           className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
         >
-          Cancel
+          {t('admin.forms.destination.buttons.cancel')}
         </button>
         <button
           type="submit"
           disabled={loading}
           className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
         >
-          {loading ? 'Saving...' : initialData ? 'Update Destination' : 'Create Destination'}
+          {loading ? t('admin.forms.destination.buttons.saving') : initialData ? t('admin.forms.destination.buttons.update') : t('admin.forms.destination.buttons.create')}
         </button>
       </div>
     </form>

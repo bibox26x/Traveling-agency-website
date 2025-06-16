@@ -1,0 +1,1010 @@
+{
+  "navigation": {
+    "home": "Home",
+    "destinations": "Destinations",
+    "trips": "Trips",
+    "about": "About",
+    "contact": "Contact",
+    "login": "Log in",
+    "signup": "Sign up",
+    "profile": "Profile",
+    "logout": "Log out",
+    "bookings": "My Bookings",
+    "admin": "Admin Dashboard",
+    "reviews": "Reviews",
+    "payments": "Payments",
+    "promotions": "Promotions"
+  },
+  "footer": {
+    "title": "Footer",
+    "brand": "TravelAgency",
+    "description": "Making the world a better place through unforgettable travel experiences. Let us help you create memories that last a lifetime.",
+    "copyright": "© {{year}} TravelAgency. All rights reserved.",
+    "sections": {
+      "company": "Company",
+      "support": "Support"
+    },
+    "company": {
+      "about": "About",
+      "contact": "Contact",
+      "careers": "Careers",
+      "blog": "Blog"
+    },
+    "support": {
+      "helpCenter": "Help Center",
+      "terms": "Terms of Service",
+      "privacy": "Privacy Policy",
+      "faq": "FAQ"
+    },
+    "social": {
+      "facebook": "Facebook",
+      "twitter": "Twitter",
+      "instagram": "Instagram",
+      "linkedin": "LinkedIn"
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "language": "Language",
+    "toggleMenu": "Toggle menu",
+    "price": "Price",
+    "date": "Date",
+    "status": "Status",
+    "actions": "Actions",
+    "next": "Next",
+    "previous": "Previous",
+    "back": "Back",
+    "confirm": "Confirm",
+    "required": "Required",
+    "optional": "Optional",
+    "details": "Details",
+    "more": "More",
+    "less": "Less",
+    "fromPrice": "From ${{price}}",
+    "duration": "duration",
+    "rating": "{{rating}} out of 5 stars",
+    "brand": "TravelAgency",
+    "dismiss": "Dismiss"
+  },
+  "home": {
+    "meta": {
+      "title": "Travel Agency - Your Journey Begins Here",
+      "description": "Discover amazing travel destinations and adventures around the world"
+    },
+    "hero": {
+      "backgroundAlt": "Beautiful travel destination",
+      "title": "Explore the World's",
+      "subtitle": "Hidden Treasures",
+      "description": "Embark on extraordinary journeys to the world's most captivating destinations. Create memories that last a lifetime.",
+      "primaryButton": "Start Your Journey",
+      "secondaryButton": "Learn More"
+    },
+    "destinations": {
+      "topPicks": "Top Picks",
+      "subtitle": "Discover our carefully curated selection of the world's most extraordinary locations"
+    },
+    "whyChooseUs": {
+      "label": "Our Promise",
+      "title": "Why Choose Us",
+      "subtitle": "Experience travel like never before with our premium services and expert guidance",
+      "expertGuides": {
+        "icon": "🌟",
+        "title": "Expert Guides",
+        "description": "Our experienced local guides ensure you discover the authentic essence of each destination"
+      },
+      "curatedExperiences": {
+        "icon": "🎯",
+        "title": "Curated Experiences",
+        "description": "Handpicked destinations and activities that create unforgettable memories"
+      },
+      "premiumService": {
+        "icon": "💎",
+        "title": "Premium Service",
+        "description": "24/7 concierge support and meticulous attention to every detail of your journey"
+      },
+      "safeTravel": {
+        "icon": "🛡️",
+        "title": "Safe Travel",
+        "description": "Comprehensive safety measures and insurance coverage"
+      },
+      "support": {
+        "icon": "🤝",
+        "title": "24/7 Support",
+        "description": "Round-the-clock assistance throughout your journey"
+      }
+    },
+    "testimonials": {
+      "label": "Testimonials",
+      "title": "What Our Travelers Say",
+      "subtitle": "Read about the amazing experiences of our satisfied travelers",
+      "paris": {
+        "name": "Sarah Johnson",
+        "trip": "Paris Adventure",
+        "quote": "An absolutely incredible experience! The guides were knowledgeable and the itinerary was perfect. I couldn't have asked for a better trip."
+      },
+      "tokyo": {
+        "name": "Michael Chen",
+        "trip": "Tokyo Explorer",
+        "quote": "The attention to detail was outstanding. Every aspect of our trip was carefully planned, making it a stress-free and enjoyable experience."
+      },
+      "safari": {
+        "name": "Emma Davis",
+        "trip": "African Safari",
+        "quote": "A life-changing journey that exceeded all expectations. The local guides provided insights that made our safari truly special."
+      }
+    },
+    "cta": {
+      "backgroundAlt": "Travel inspiration",
+      "title": "Ready to Start Your Adventure?",
+      "subtitle": "Let us help you create the perfect journey tailored to your dreams",
+      "button": "Start Planning"
+    }
+  },
+  "destinations": {
+    "title": "Popular Destinations",
+    "viewAll": "View All Destinations",
+    "readMore": "Read More",
+    "bookNow": "Book Now",
+    "country": "Country",
+    "description": "Description",
+    "featured": "Featured Destinations",
+    "searchPlaceholder": "Search destinations...",
+    "filterByRegion": "Filter by Region",
+    "sortBy": "Sort by",
+    "popularity": "Popularity",
+    "priceRange": "Price Range",
+    "duration": "Duration",
+    "noResults": "No destinations found",
+    "loadMore": "Load More",
+    "exploreDestination": "Explore Destination",
+    "hero": {
+      "title": "Discover Your Next",
+      "subtitle": "Adventure",
+      "description": "Explore breathtaking destinations and create unforgettable memories around the world."
+    },
+    "explore": {
+      "label": "Explore",
+      "subtitle": "Discover our carefully curated selection of the world's most extraordinary locations"
+    },
+    "noDestinations": {
+      "title": "No destinations available at the moment.",
+      "subtitle": "Please check back later for exciting new locations!"
+    },
+    "whyChooseUs": {
+      "label": "Our Promise",
+      "title": "Why Travel With Us",
+      "subtitle": "Experience the difference of traveling with a dedicated team of experts"
+    }
+  },
+  "destinationDetails": {
+    "availableTrips": {
+      "label": "Explore",
+      "title": "Available Trips",
+      "subtitle": "Choose from our selection of amazing adventures in {{destination}}",
+      "noTrips": {
+        "title": "No trips available at the moment.",
+        "subtitle": "Please check back later for exciting new adventures!"
+      }
+    }
+  },
+  "trips": {
+    "title": "Available Trips",
+    "duration": "Duration",
+    "price": "Price",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "availability": "Availability",
+    "bookTrip": "Book Trip",
+    "included": "What's Included",
+    "notIncluded": "What's Not Included",
+    "itinerary": "Itinerary",
+    "requirements": "Requirements",
+    "difficulty": "Difficulty Level",
+    "groupSize": "Group Size",
+    "languages": "Languages",
+    "accommodation": "Accommodation",
+    "transportation": "Transportation",
+    "meals": "Meals",
+    "highlights": "Trip Highlights",
+    "reviews": "Trip Reviews",
+    "similar": "Similar Trips",
+    "customizeTrip": "Customize Trip",
+    "viewDetails": "View Trip Details",
+    "durationDisplay": "{{count}} {{count, plural, one {day} other {days}}}",
+    "hero": {
+      "subtitle": "Adventures Await",
+      "description": "Discover extraordinary journeys and create memories that last a lifetime."
+    },
+    "noTrips": {
+      "title": "No trips available for your selection.",
+      "subtitle": "Try adjusting your filters or check back later!"
+    },
+    "features": {
+      "label": "Our Commitment",
+      "title": "The Travel Agency Difference",
+      "subtitle": "Experience travel like never before with our premium services and expert guidance"
+    },
+    "details": {
+      "whatToExpect": "What to Expect",
+      "included": {
+        "title": "Included",
+        "subtitle": "What's Included",
+        "items": {
+          "guide": "Professional guide",
+          "transportation": "Transportation",
+          "accommodation": "Accommodation",
+          "equipment": "Equipment"
+        }
+      },
+      "requirements": {
+        "title": "Requirements",
+        "items": {
+          "passport": "Valid passport",
+          "insurance": "Travel insurance",
+          "fitness": "Basic fitness level",
+          "clothing": "Appropriate clothing"
+        }
+      }
+    },
+    "card": {
+      "icons": {
+        "plane": "✈️",
+        "location": "📍",
+        "calendar": "🗓️",
+        "duration": "⏱️"
+      },
+      "locationLabel": "Location",
+      "dateRange": "{{startDate}} - {{endDate}}"
+    }
+  },
+  "tripDetails": {
+    "backToDestinations": "Back to Destinations",
+    "overview": {
+      "title": "Trip Overview",
+      "dates": "Dates",
+      "duration": "Duration",
+      "location": "Location",
+      "days": "days"
+    },
+    "details": {
+      "title": "Trip Details",
+      "price": "Price",
+      "bookNow": "Book Now"
+    },
+    "pricing": {
+      "price": "Price",
+      "bookNow": "Book Now"
+    },
+    "additionalInfo": {
+      "title": "Additional Information",
+      "freeCancellation": "Free cancellation up to 24 hours before the trip",
+      "instantConfirmation": "Instant confirmation upon booking"
+    }
+  },
+  "auth": {
+    "emailPlaceholder": "Enter your email",
+    "passwordPlaceholder": "Enter your password",
+    "forgotPassword": "Forgot Password?",
+    "rememberMe": "Remember Me",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "createAccount": "Create Account",
+    "loginTitle": "Welcome Back",
+    "loginSubtitle": "Sign in to access your account",
+    "registerTitle": "Create Your Account",
+    "registerSubtitle": "Join us and start your journey",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "phone": "Phone Number",
+    "confirmPassword": "Confirm Password",
+    "agreeToTerms": "I agree to the Terms and Conditions",
+    "passwordRequirements": "Password must be at least 8 characters long",
+    "invalidEmail": "Please enter a valid email address",
+    "passwordMismatch": "Passwords do not match",
+    "accountCreated": "Account created successfully",
+    "signInRequired": "Sign in Required",
+    "signInToViewBookings": "Please sign in to view your bookings",
+    "signIn": "Sign in"
+  },
+  "profile": {
+    "title": "My Profile",
+    "personalInfo": "Personal Information",
+    "updateProfile": "Update Profile",
+    "changePassword": "Change Password",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirmNewPassword": "Confirm New Password",
+    "preferences": "Preferences",
+    "notifications": "Notifications",
+    "emailNotifications": "Email Notifications",
+    "smsNotifications": "SMS Notifications",
+    "language": "Language Preference",
+    "currency": "Currency Preference",
+    "deleteAccount": "Delete Account",
+    "deleteWarning": "This action cannot be undone",
+    "meta": {
+      "description": "Manage your account settings, preferences, and view your travel history"
+    },
+    "subtitle": "Manage your account settings and view your travel history",
+    "settings": {
+      "description": "Manage your account preferences and settings",
+      "showProfile": "Show my profile to other users",
+      "publicBookings": "Make my bookings public"
+    },
+    "bookings": {
+      "title": "My Bookings",
+      "upcoming": "Upcoming Bookings",
+      "past": "Past Bookings",
+      "cancelled": "Cancelled Bookings"
+    }
+  },
+  "bookings": {
+    "title": "My Bookings",
+    "subtitle": "View and manage your travel bookings",
+    "upcoming": "Upcoming Trips",
+    "past": "Past Trips",
+    "cancelled": "Cancelled",
+    "noBookings": "You don't have any bookings yet",
+    "bookingDetails": "Booking Details",
+    "bookingDate": "Booking Date",
+    "travelDate": "Travel Dates",
+    "passengers": "Passengers",
+    "totalPrice": "Total Price",
+    "paymentStatusTitle": "Payment Status",
+    "bookingStatus": "Booking Status",
+    "cancelBooking": "Cancel Booking",
+    "modifyBooking": "Modify Booking",
+    "downloadTicket": "Download Ticket",
+    "confirmCancellation": "Confirm Cancellation",
+    "cancellationWarning": "Are you sure you want to cancel this booking?",
+    "notFound": "Booking not found",
+    "filters": {
+      "all": "All Bookings",
+      "upcoming": "Upcoming",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "details": {
+      "bookingId": "Booking ID",
+      "tripName": "Trip",
+      "dates": "Travel Dates",
+      "status": "Status",
+      "duration": "Duration",
+      "totalPrice": "Total Price",
+      "participants": "Guests",
+      "customerInfo": "Customer Information",
+      "name": "Name",
+      "email": "Email",
+      "location": "Location",
+      "specialRequirements": "Special Requirements",
+      "tripNotFound": "Trip not found",
+      "durationNotAvailable": "Duration not available"
+    },
+    "actions": {
+      "viewDetails": "View Details",
+      "modifyBooking": "Modify Booking",
+      "cancelBooking": "Cancel Booking",
+      "downloadInvoice": "Download Invoice",
+      "contactSupport": "Contact Support"
+    },
+    "status": {
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "cancelled": "Cancelled"
+    },
+    "paymentStatus": {
+      "pending": "Payment Pending",
+      "paid": "Paid",
+      "refunded": "Refunded"
+    }
+  },
+  "reviews": {
+    "title": "Customer Reviews",
+    "writeReview": "Write a Review",
+    "rating": "Rating",
+    "comment": "Comment",
+    "reviewTitle": "Review Title",
+    "yourExperience": "Your Experience",
+    "photos": "Add Photos",
+    "anonymous": "Post Anonymously",
+    "verifiedPurchase": "Verified Purchase",
+    "helpful": "Helpful",
+    "reportReview": "Report Review",
+    "thankYou": "Thank you for your review"
+  },
+  "payments": {
+    "title": "Payment Information",
+    "cardNumber": "Card Number",
+    "expiryDate": "Expiry Date",
+    "cvv": "CVV",
+    "nameOnCard": "Name on Card",
+    "billingAddress": "Billing Address",
+    "paymentMethod": "Payment Method",
+    "savedCards": "Saved Cards",
+    "addNewCard": "Add New Card",
+    "securePayment": "Secure Payment",
+    "processingFee": "Processing Fee",
+    "total": "Total",
+    "confirmPayment": "Confirm Payment",
+    "paymentSuccess": "Payment Successful",
+    "paymentError": "Payment Failed"
+  },
+  "admin": {
+    "dashboard": "Dashboard",
+    "users": "Users",
+    "trips": "Trips",
+    "destinations": "Destinations",
+    "bookings": "Bookings",
+    "reviews": "Reviews",
+    "analytics": "Analytics",
+    "settings": "Settings",
+    "addNew": "Add New",
+    "export": "Export",
+    "import": "Import",
+    "overview": "Overview",
+    "statistics": "Statistics",
+    "revenue": "Revenue",
+    "performance": "Performance",
+    "management": {
+      "trips": {
+        "title": "Trip Management",
+        "description": "Manage and organize your travel packages",
+        "addNew": "Add New Trip",
+        "view": "View",
+        "edit": "Edit",
+        "delete": "Delete",
+        "deleteConfirm": "Are you sure you want to delete this trip?",
+        "price": "Price",
+        "duration": "Duration",
+        "durationDays": "{{count}} days",
+        "location": "Location"
+      },
+      "destinations": {
+        "title": "Destination Management",
+        "description": "Manage and organize your travel destinations",
+        "addNew": "Add New Destination",
+        "edit": "Edit",
+        "delete": "Delete",
+        "deleteConfirm": "Are you sure you want to delete this destination?",
+        "associatedTrips": "Associated Trips"
+      },
+      "bookings": {
+        "title": "Booking Management",
+        "description": "Manage and review all customer bookings",
+        "search": {
+          "label": "Search",
+          "placeholder": "Search by trip, location, or email"
+        },
+        "status": {
+          "label": "Booking Status",
+          "all": "All Statuses",
+          "pending": "Pending",
+          "confirmed": "Confirmed",
+          "cancelled": "Cancelled"
+        },
+        "payment": {
+          "label": "Payment Status",
+          "all": "All Payments",
+          "pending": "Pending",
+          "paid": "Paid",
+          "refunded": "Refunded"
+        },
+        "noResults": "No bookings found matching your filters."
+      }
+    },
+    "contact": {
+      "title": "Contact Messages",
+      "description": "View and manage contact form submissions from users",
+      "noMessages": "No messages yet",
+      "from": "From",
+      "markAsRead": "Mark as Read",
+      "delete": "Delete",
+      "deleteConfirm": "Are you sure you want to delete this message?",
+      "deleteSuccess": "Message deleted successfully",
+      "deleteError": "Failed to delete message",
+      "fetchError": "Failed to fetch messages",
+      "markReadError": "Failed to mark message as read"
+    },
+    "errors": {
+      "title": "Error",
+      "dismiss": "Dismiss",
+      "fetchData": "Failed to load data. Please try again later.",
+      "addTrip": "Failed to add trip",
+      "updateTrip": "Failed to update trip",
+      "deleteTrip": "Failed to delete trip",
+      "addDestination": "Failed to add destination",
+      "updateDestination": "Failed to update destination",
+      "deleteDestination": "Failed to delete destination",
+      "assignTrip": "Failed to assign trip to destination",
+      "updateBookingStatus": "Failed to update booking status",
+      "updatePaymentStatus": "Failed to update payment status",
+      "deleteBooking": "Failed to delete booking",
+      "updateDestinationTrip": "Failed to update destination"
+    },
+    "forms": {
+      "trip": {
+        "title": "Title",
+        "description": "Description",
+        "location": "Location",
+        "destination": "Destination",
+        "selectDestination": "Select a destination",
+        "price": "Price",
+        "startDate": "Start Date",
+        "duration": "Duration (days)",
+        "endDate": "End Date (calculated)",
+        "imageUrl": "Image URL",
+        "required": "Required field",
+        "validation": {
+          "required": "Please fill in all required fields: {{fields}}",
+          "numeric": "Please enter a valid number"
+        },
+        "placeholders": {
+          "title": "Enter trip title",
+          "description": "Enter trip description",
+          "location": "Enter location",
+          "price": "Enter price",
+          "imageUrl": "Enter image URL"
+        },
+        "buttons": {
+          "create": "Create Trip",
+          "update": "Update Trip",
+          "cancel": "Cancel",
+          "saving": "Saving..."
+        }
+      },
+      "destination": {
+        "name": "Name",
+        "country": "Country",
+        "description": "Description",
+        "imageUrl": "Image URL",
+        "placeholders": {
+          "name": "Enter destination name",
+          "country": "Enter country name",
+          "description": "Enter destination description",
+          "imageUrl": "Enter image URL"
+        },
+        "buttons": {
+          "create": "Create Destination",
+          "update": "Update Destination",
+          "cancel": "Cancel",
+          "saving": "Saving..."
+        },
+        "errors": {
+          "save": "Failed to save destination"
+        }
+      }
+    }
+  },
+  "about": {
+    "title": "About Us",
+    "ourStory": "Our Story",
+    "mission": {
+      "title": "Our Mission",
+      "description": "To provide exceptional travel experiences that inspire, educate, and connect people with the world's most remarkable destinations. We strive to make travel accessible, sustainable, and enriching for everyone."
+    },
+    "vision": {
+      "title": "Our Vision",
+      "description": "To be the world's most trusted travel companion, known for our personalized service, innovative solutions, and commitment to responsible tourism. We aim to transform the way people experience and appreciate the world."
+    },
+    "values": "Our Values",
+    "team": "Our Team",
+    "contact": {
+      "title": "Get in Touch",
+      "address": {
+        "title": "Address",
+        "street": "123 Travel Street",
+        "city": "Adventure City, AC 12345",
+        "country": "United States"
+      },
+      "info": {
+        "title": "Contact",
+        "phone": "Phone: (555) 123-4567",
+        "email": "Email: info@travelagency.com"
+      },
+      "hours": {
+        "title": "Hours",
+        "weekdays": "Monday - Friday: 9am - 6pm",
+        "saturday": "Saturday: 10am - 4pm",
+        "sunday": "Sunday: Closed"
+      }
+    },
+    "careers": "Careers",
+    "partners": "Our Partners",
+    "sustainability": "Sustainability",
+    "responsibility": "Social Responsibility",
+    "meta": {
+      "title": "About Us",
+      "description": "Learn about our passion for travel and commitment to creating unforgettable experiences for our clients."
+    },
+    "hero": {
+      "title": "About TravelAgency",
+      "subtitle": "Your trusted partner in creating unforgettable travel experiences",
+      "description": "We are passionate about making your travel dreams come true. With years of experience and a dedicated team, we create personalized journeys that exceed expectations."
+    },
+    "whyChooseUs": {
+      "title": "Why Choose Us",
+      "expert": {
+        "title": "Expert Guidance",
+        "description": "Our team of experienced travel professionals ensures every trip is perfectly planned."
+      },
+      "secure": {
+        "title": "Secure Booking",
+        "description": "Your payments and personal information are protected with advanced security measures."
+      },
+      "support": {
+        "title": "24/7 Support",
+        "description": "Our dedicated support team is always available to assist you during your journey."
+      }
+    }
+  },
+  "errors": {
+    "required": "This field is required",
+    "invalidEmail": "Invalid email address",
+    "invalidPassword": "Invalid password",
+    "networkError": "Network error",
+    "unauthorized": "Unauthorized access",
+    "notFound": "Not found",
+    "serverError": "Server error",
+    "tryAgain": "Please try again",
+    "fetchBookings": "Failed to fetch bookings. Please try again.",
+    "fetchBookingDetails": "Failed to fetch booking details. Please try again."
+  },
+  "languages": {
+    "english": "English",
+    "french": "French",
+    "arabic": "Arabic"
+  },
+  "meta": {
+    "defaultTitle": "Travel Agency - Your Journey Begins Here",
+    "defaultDescription": "Discover amazing travel destinations and adventures around the world. Expert guides, curated experiences, and unforgettable memories await.",
+    "defaultKeywords": "travel, adventure, destinations, trips, tours, vacation, holiday, booking, travel agency",
+    "destinations": {
+      "title": "Explore Amazing Destinations | Travel Agency",
+      "description": "Discover handpicked destinations around the world. From exotic beaches to mountain retreats, find your perfect travel destination."
+    },
+    "trips": {
+      "title": "Adventure Trips & Tours | Travel Agency",
+      "description": "Browse our collection of carefully curated trips and tours. Expert guides, unique experiences, and hassle-free planning."
+    },
+    "about": {
+      "title": "About Us | Travel Agency",
+      "description": "Learn about our passion for travel and commitment to creating unforgettable experiences for our clients."
+    }
+  },
+  "ui": {
+    "form": {
+      "email": "Email",
+      "password": "Password",
+      "required": "Required",
+      "optional": "Optional",
+      "submit": "Submit",
+      "cancel": "Cancel",
+      "save": "Save Changes",
+      "delete": "Delete",
+      "edit": "Edit",
+      "search": "Search",
+      "filter": "Filter",
+      "sort": "Sort",
+      "clear": "Clear",
+      "close": "Close",
+      "back": "Back",
+      "next": "Next",
+      "previous": "Previous",
+      "loading": "Loading...",
+      "noResults": "No results found",
+      "selectOption": "Select an option",
+      "placeholders": {
+        "search": "Search...",
+        "email": "Enter your email",
+        "password": "Enter your password",
+        "name": "Enter your name",
+        "phone": "Enter your phone number",
+        "message": "Enter your message"
+      }
+    },
+    "validation": {
+      "required": "This field is required",
+      "email": "Please enter a valid email address",
+      "password": {
+        "min": "Password must be at least {{min}} characters",
+        "match": "Passwords must match",
+        "requirements": "Password must contain at least one uppercase letter, one number, and one special character"
+      },
+      "phone": "Please enter a valid phone number",
+      "date": "Please enter a valid date"
+    },
+    "modal": {
+      "confirm": {
+        "title": "Are you sure?",
+        "message": "This action cannot be undone.",
+        "confirm": "Yes, proceed",
+        "cancel": "No, cancel"
+      },
+      "success": {
+        "title": "Success!",
+        "close": "Close"
+      },
+      "error": {
+        "title": "Error",
+        "close": "Close",
+        "tryAgain": "Try Again"
+      }
+    },
+    "tooltip": {
+      "info": "More information",
+      "edit": "Edit this item",
+      "delete": "Delete this item",
+      "share": "Share",
+      "favorite": "Add to favorites",
+      "unfavorite": "Remove from favorites"
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page {{page}} of {{total}}",
+      "showing": "Showing {{start}}-{{end}} of {{total}} results"
+    },
+    "breadcrumbs": {
+      "home": "Home",
+      "back": "Back"
+    },
+    "notifications": {
+      "success": "Success!",
+      "error": "An error occurred",
+      "info": "Information",
+      "warning": "Warning"
+    }
+  },
+  "pages": {
+    "about": {
+      "title": "About TravelAgency",
+      "subtitle": "Your trusted partner in creating unforgettable travel experiences",
+      "mission": {
+        "title": "Our Mission",
+        "description": "To provide exceptional travel experiences that inspire, educate, and connect people with the world's most remarkable destinations. We strive to make travel accessible, sustainable, and enriching for everyone."
+      },
+      "vision": {
+        "title": "Our Vision",
+        "description": "To be the world's most trusted travel companion, known for our personalized service, innovative solutions, and commitment to responsible tourism. We aim to transform the way people experience and appreciate the world."
+      },
+      "whyChooseUs": {
+        "title": "Why Choose Us",
+        "expertGuidance": {
+          "title": "Expert Guidance",
+          "description": "Our team of experienced travel professionals ensures every trip is perfectly planned."
+        },
+        "secureBooking": {
+          "title": "Secure Booking",
+          "description": "Your payments and personal information are protected with advanced security measures."
+        },
+        "support": {
+          "title": "24/7 Support",
+          "description": "Our dedicated support team is always available to assist you during your journey."
+        }
+      },
+      "contact": {
+        "title": "Get in Touch",
+        "address": {
+          "title": "Address",
+          "street": "123 Travel Street",
+          "city": "Adventure City, AC 12345",
+          "country": "United States"
+        },
+        "info": {
+          "title": "Contact",
+          "phone": "Phone: (555) 123-4567",
+          "email": "Email: info@travelagency.com"
+        },
+        "hours": {
+          "title": "Hours",
+          "weekdays": "Monday - Friday: 9am - 6pm",
+          "saturday": "Saturday: 10am - 4pm",
+          "sunday": "Sunday: Closed"
+        }
+      }
+    },
+    "profile": {
+      "title": "My Profile",
+      "personalInfo": {
+        "title": "Personal Information",
+        "name": "Full Name",
+        "email": "Email Address",
+        "phone": "Phone Number",
+        "address": "Address",
+        "preferences": "Travel Preferences"
+      },
+      "settings": {
+        "title": "Account Settings",
+        "description": "Manage your account preferences and settings",
+        "notifications": "Notification Preferences",
+        "language": "Language Preference",
+        "currency": "Currency Preference",
+        "privacy": "Privacy Settings",
+        "showProfile": "Show my profile to other users",
+        "publicBookings": "Make my bookings public"
+      },
+      "bookings": {
+        "title": "My Bookings",
+        "description": "View and manage your travel bookings",
+        "upcoming": "Upcoming Trips",
+        "past": "Past Trips",
+        "cancelled": "Cancelled Bookings"
+      }
+    },
+    "admin": {
+      "dashboard": {
+        "title": "Admin Dashboard",
+        "overview": "Overview",
+        "stats": {
+          "totalBookings": "Total Bookings",
+          "activeTrips": "Active Trips",
+          "totalRevenue": "Total Revenue",
+          "newCustomers": "New Customers"
+        }
+      },
+      "management": {
+        "trips": "Trip Management",
+        "users": "User Management",
+        "bookings": "Booking Management",
+        "content": "Content Management"
+      },
+      "reports": {
+        "title": "Reports",
+        "financial": "Financial Reports",
+        "bookings": "Booking Reports",
+        "customer": "Customer Reports"
+      }
+    },
+    "bookings": {
+      "title": "My Bookings",
+      "filters": {
+        "all": "All Bookings",
+        "upcoming": "Upcoming",
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+      },
+      "details": {
+        "bookingId": "Booking ID",
+        "tripName": "Trip Name",
+        "dates": "Travel Dates",
+        "status": "Status",
+        "totalPrice": "Total Price",
+        "participants": "Participants",
+        "paymentInfo": {
+          "title": "Payment Information",
+          "totalPaid": "Total Paid",
+          "remaining": "Remaining Amount",
+          "fullyPaid": "Fully Paid"
+        }
+      },
+      "actions": {
+        "viewDetails": "View Details",
+        "modifyBooking": "Modify Booking",
+        "cancelBooking": "Cancel Booking",
+        "downloadInvoice": "Download Invoice",
+        "contactSupport": "Contact Support"
+      },
+      "loading": "Loading your bookings...",
+      "error": "Error loading bookings",
+      "payment": {
+        "title": "Make a Payment",
+        "amount": "Amount to Pay",
+        "method": "Payment Method",
+        "submit": "Submit Payment",
+        "success": "Payment successful",
+        "error": "Payment failed"
+      }
+    }
+  },
+  "dynamic": {
+    "auth": {
+      "success": {
+        "login": "Successfully logged in",
+        "register": "Account created successfully",
+        "logout": "Successfully logged out",
+        "passwordReset": "Password reset email sent",
+        "passwordChange": "Password changed successfully"
+      },
+      "error": {
+        "invalidCredentials": "Invalid email or password",
+        "emailExists": "Email already exists",
+        "weakPassword": "Password is too weak",
+        "serverError": "Server error occurred",
+        "networkError": "Network error occurred"
+      }
+    },
+    "booking": {
+      "success": {
+        "created": "Booking confirmed successfully",
+        "modified": "Booking modified successfully",
+        "cancelled": "Booking cancelled successfully",
+        "refunded": "Refund processed successfully"
+      },
+      "error": {
+        "unavailable": "Selected dates are unavailable",
+        "paymentFailed": "Payment processing failed",
+        "invalidDates": "Invalid travel dates",
+        "noAvailability": "No availability for selected options"
+      }
+    },
+    "profile": {
+      "success": {
+        "updated": "Profile updated successfully",
+        "preferencesUpdated": "Preferences updated successfully",
+        "photoUpdated": "Profile photo updated successfully"
+      },
+      "error": {
+        "updateFailed": "Failed to update profile",
+        "invalidData": "Invalid profile data",
+        "photoUploadFailed": "Failed to upload photo"
+      }
+    },
+    "admin": {
+      "success": {
+        "tripCreated": "Trip created successfully",
+        "tripUpdated": "Trip updated successfully",
+        "userUpdated": "User updated successfully",
+        "contentUpdated": "Content updated successfully"
+      },
+      "error": {
+        "unauthorized": "Unauthorized access",
+        "createFailed": "Failed to create item",
+        "updateFailed": "Failed to update item",
+        "deleteFailed": "Failed to delete item"
+      }
+    }
+  },
+  "countdown": {
+    "paymentConfirmed": "Payment confirmed",
+    "bookingExpired": "Booking expired",
+    "timeRemaining": "Time remaining to pay:",
+    "autoCancelWarning": "* This booking will be automatically cancelled if payment is not confirmed within the time limit."
+  },
+  "contact": {
+    "title": "Contact Us",
+    "description": "Have questions or need assistance? We're here to help! Fill out the form below and we'll get back to you as soon as possible.",
+    "form": {
+      "name": "Your Name",
+      "email": "Email Address",
+      "subject": "Subject",
+      "message": "Message",
+      "submit": "Send Message",
+      "sending": "Sending..."
+    },
+    "info": {
+      "phone": "Phone",
+      "email": "Email",
+      "address": "Address"
+    },
+    "successMessage": "Thank you for your message. We'll get back to you soon!",
+    "errorMessage": "Sorry, there was an error sending your message. Please try again."
+  },
+  "units": {
+    "duration": "days"
+  },
+  "bookingModal": {
+    "title": "Book Your Trip",
+    "numberOfGuests": "Number of Guests",
+    "specialRequirements": {
+      "label": "Special Requirements",
+      "optional": "(Optional)",
+      "placeholder": "Any dietary restrictions, accessibility needs, or other requirements..."
+    },
+    "pricing": {
+      "pricePerPerson": "Price per person",
+      "totalPrice": "Total price"
+    },
+    "confirmBooking": "Confirm Booking"
+  }
+} 

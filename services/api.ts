@@ -9,90 +9,56 @@ const clearRefreshPromise = () => {
   refreshPromise = null;
 };
 
+// Get the base URL from environment or default to relative path
+const baseURL = typeof window !== 'undefined' 
+  ? ''  // Use empty string for client-side since Next.js handles the routing
+  : process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'; // Use full URL for server-side
+
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL,
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true // Important for cookies
+  withCredentials: true  // Important: Send cookies with requests
 });
 
-// Add auth token to requests if available
+// Add /api prefix to all requests
 api.interceptors.request.use((config) => {
-  if (typeof window !== 'undefined') {
-    const token = localStorage.getItem('accessToken');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+  if (!config.url?.startsWith('/api')) {
+    config.url = `/api${config.url}`;
   }
   return config;
 }, (error) => {
   return Promise.reject(error);
 });
 
-// Add response interceptor for error handling and token refresh
+// Add response interceptor for error handling
 api.interceptors.response.use(
-  (response) => {
-    // Check if there's a new access token in the response headers
-    const newToken = response.headers['authorization'];
-    if (newToken) {
-      const token = newToken.split(' ')[1];
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('accessToken', token);
-      }
-    }
-    return response;
-  },
+  (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
-    // If refresh token request fails, logout
-    if (error.response?.status === 401 && originalRequest.url?.includes('/auth/refresh')) {
-      await auth.logout();
-      if (typeof window !== 'undefined') {
-        window.location.href = '/login?redirect=' + window.location.pathname;
-      }
+    // Don't attempt refresh if we're on the server side
+    if (typeof window === 'undefined') {
       return Promise.reject(error);
     }
 
-    // Prevent infinite refresh loops
+    // If refresh token request fails, handle logout
+    if (error.response?.status === 401 && originalRequest.url?.includes('/auth/refresh')) {
+      clearRefreshPromise(); // Clear any pending refresh promise
+      return Promise.reject(error);
+    }
+
+    // If error is 401 and not a refresh token request, try to refresh token
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
-        // Use existing refresh promise if one is in progress
-        if (!refreshPromise) {
-          const rememberMe = localStorage.getItem('rememberMe') === 'true';
-          refreshPromise = auth.refreshToken(rememberMe)
-            .finally(clearRefreshPromise);
-        }
-
-        const response = await refreshPromise;
-        const { accessToken, user } = response;
-        
-        if (accessToken) {
-          if (typeof window !== 'undefined') {
-            localStorage.setItem('accessToken', accessToken);
-            if (user) {
-              localStorage.setItem('user', JSON.stringify(user));
-            }
-          }
-          originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-          return api(originalRequest);
-        }
-        
-        // If no access token in response, redirect to login
-        await auth.logout();
-        if (typeof window !== 'undefined') {
-          window.location.href = '/login?redirect=' + window.location.pathname;
-        }
-        return Promise.reject(error);
+        // Use the debounced refresh token mechanism
+        await auth.refreshToken();
+        return api(originalRequest);
       } catch (refreshError) {
-        // Refresh token failed, redirect to login
-        await auth.logout();
-        if (typeof window !== 'undefined') {
-          window.location.href = '/login?redirect=' + window.location.pathname;
-        }
+        clearRefreshPromise(); // Clear any pending refresh promise
         return Promise.reject(refreshError);
       }
     }
@@ -105,17 +71,10 @@ api.interceptors.response.use(
 export const auth = {
   login: async (email: string, password: string, rememberMe: boolean = false) => {
     try {
-      const response = await api.post('/auth/login', { email, password, rememberMe });
-      const { accessToken, user } = response.data;
-      if (!accessToken || !user) {
-        throw new Error('Invalid response from server');
-      }
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('accessToken', accessToken);
-        localStorage.setItem('user', JSON.stringify(user));
-        localStorage.setItem('rememberMe', String(rememberMe));
-      }
-      return { accessToken, user };
+      const response = await api.post('/auth/login', { email, password, rememberMe }, {
+        withCredentials: true
+      });
+      return response.data;
     } catch (error: any) {
       if (error.response?.status === 401) {
         throw new Error('Invalid email or password');
@@ -131,17 +90,10 @@ export const auth = {
 
   register: async (name: string, email: string, password: string, rememberMe: boolean = false) => {
     try {
-      const response = await api.post('/auth/register', { name, email, password, rememberMe });
-      const { accessToken, user } = response.data;
-      if (!accessToken || !user) {
-        throw new Error('Invalid response from server');
-      }
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('accessToken', accessToken);
-        localStorage.setItem('user', JSON.stringify(user));
-        localStorage.setItem('rememberMe', String(rememberMe));
-      }
-      return { accessToken, user };
+      const response = await api.post('/auth/register', { name, email, password, rememberMe }, {
+        withCredentials: true
+      });
+      return response.data;
     } catch (error: any) {
       if (error.response?.status === 409) {
         throw new Error('Email already exists');
@@ -155,31 +107,61 @@ export const auth = {
     }
   },
 
-  refreshToken: async (rememberMe: boolean = false) => {
-    try {
-      const response = await api.post('/auth/refresh', { rememberMe });
-      return response.data;
-    } catch (error) {
-      // Clear any existing tokens on refresh failure
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('user');
-        localStorage.removeItem('rememberMe');
+  refreshToken: async () => {
+    // Use debouncing to prevent multiple concurrent refresh requests
+    if (refreshPromise) {
+      return refreshPromise;
+    }
+
+    refreshPromise = (async () => {
+      try {
+        const response = await api.post('/auth/refresh', {}, {
+          withCredentials: true
+        });
+        return response.data;
+      } catch (error) {
+        throw error;
+      } finally {
+        // Clear the promise after a short delay to prevent immediate subsequent requests
+        setTimeout(clearRefreshPromise, 1000);
       }
+    })();
+
+    return refreshPromise;
+  },
+
+  logout: async () => {
+    try {
+      // Clear any pending refresh operations
+      clearRefreshPromise();
+      
+      // Make the logout request
+      await api.post('/auth/logout', {}, {
+        withCredentials: true
+      });
+
+      // Clear all auth-related cookies manually as backup
+      document.cookie = 'accessToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+      document.cookie = 'refreshToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+      
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Still clear cookies even if the API call fails
+      document.cookie = 'accessToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+      document.cookie = 'refreshToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
       throw error;
     }
   },
 
-  logout: async () => {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('user');
-      localStorage.removeItem('rememberMe');
-    }
+  // Add a method to check auth status without triggering a refresh
+  checkAuth: async () => {
     try {
-      await api.post('/auth/logout');
+      const response = await api.get('/auth/status', {
+        withCredentials: true
+      });
+      return response.data;
     } catch (error) {
-      console.error('Logout error:', error);
+      throw error;
     }
   }
 };
@@ -286,6 +268,61 @@ export const payments = {
   },
   confirmPayment: async (paymentId: number, adminNote?: string): Promise<Payment> => {
     const response = await api.post<Payment>(`/payments/${paymentId}/confirm`, { adminNote });
+    return response.data;
+  }
+};
+
+// Admin API
+export const admin = {
+  // Booking Management
+  getAllBookings: async (filters?: {
+    status?: BookingStatus;
+    paymentStatus?: PaymentStatus;
+    search?: string;
+  }): Promise<Booking[]> => {
+    const params = new URLSearchParams();
+    if (filters?.status) params.append('status', filters.status);
+    if (filters?.paymentStatus) params.append('paymentStatus', filters.paymentStatus);
+    if (filters?.search) params.append('search', filters.search);
+
+    const response = await api.get(`/admin/bookings?${params.toString()}`);
+    return response.data;
+  },
+
+  updateBookingStatus: async (bookingId: number, status: BookingStatus): Promise<Booking> => {
+    const response = await api.patch(`/admin/bookings/${bookingId}/status`, { status });
+    return response.data;
+  },
+
+  updatePaymentStatus: async (bookingId: number, paymentStatus: PaymentStatus): Promise<Booking> => {
+    const response = await api.patch(`/admin/bookings/${bookingId}/payment-status`, { paymentStatus });
+    return response.data;
+  },
+
+  deleteBooking: async (bookingId: number): Promise<void> => {
+    await api.delete(`/admin/bookings/${bookingId}`);
+  },
+
+  // Payment Management
+  getAllPayments: async (filters?: {
+    status?: 'pending' | 'confirmed' | 'rejected';
+    search?: string;
+  }): Promise<Payment[]> => {
+    const params = new URLSearchParams();
+    if (filters?.status) params.append('status', filters.status);
+    if (filters?.search) params.append('search', filters.search);
+
+    const response = await api.get(`/admin/payments?${params.toString()}`);
+    return response.data;
+  },
+
+  confirmPayment: async (paymentId: number, adminNote?: string): Promise<Payment> => {
+    const response = await api.post(`/admin/payments/${paymentId}/confirm`, { adminNote });
+    return response.data;
+  },
+
+  rejectPayment: async (paymentId: number, adminNote: string): Promise<Payment> => {
+    const response = await api.post(`/admin/payments/${paymentId}/reject`, { adminNote });
     return response.data;
   }
 };

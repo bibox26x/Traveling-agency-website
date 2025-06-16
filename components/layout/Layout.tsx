@@ -3,6 +3,7 @@ import { motion, AnimatePresence, easeInOut } from 'framer-motion';
 import { useRouter } from 'next/router';
 import Header from './Header';
 import Footer from './Footer';
+import { Toaster } from 'react-hot-toast';
 
 interface LayoutProps {
   children: ReactNode;
@@ -31,7 +32,8 @@ export default function Layout({
   const router = useRouter();
   
   return (
-    <div className="min-h-screen flex flex-col">
+    <>
+      <Toaster position="top-right" />
       {!hideHeader && <Header />}
       
       <main className="flex-grow w-full">
@@ -69,6 +71,6 @@ export default function Layout({
       </main>
 
       {!hideFooter && <Footer />}
-    </div>
+    </>
   );
 } 

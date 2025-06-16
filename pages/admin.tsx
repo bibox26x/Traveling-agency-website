@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 import type { Trip } from '../types/trip';
 import type { Destination } from '../types/destination';
 import type { Booking, BookingStatus, PaymentStatus } from '../types/booking';
@@ -12,8 +13,10 @@ import { useAuth } from '../context/AuthContext';
 import BookingCard from '../components/bookings/BookingCard';
 import Head from 'next/head';
 import { Button } from '@heroui/react';
+import ContactMessages from '../components/admin/ContactMessages';
 
 export default function AdminPage() {
+  const { t } = useTranslation();
   const router = useRouter();
   const [trips, setTrips] = useState<Trip[]>([]);
   const [destinations, setDestinations] = useState<Destination[]>([]);
@@ -25,7 +28,7 @@ export default function AdminPage() {
   const [editingDestination, setEditingDestination] = useState<Destination | null>(null);
   const { user } = useAuth();
   const [bookings, setBookings] = useState<Booking[]>([]);
-  const [activeTab, setActiveTab] = useState<'trips' | 'destinations' | 'bookings'>('trips');
+  const [activeTab, setActiveTab] = useState<'trips' | 'destinations' | 'bookings' | 'messages'>('trips');
   const [filterStatus, setFilterStatus] = useState<BookingStatus | 'all'>('all');
   const [filterPayment, setFilterPayment] = useState<PaymentStatus | 'all'>('all');
   const [searchTerm, setSearchTerm] = useState('');
@@ -77,7 +80,7 @@ export default function AdminPage() {
       setIsAddingTrip(false);
     } catch (err: any) {
       console.error('Add trip error:', err);
-      setError(err.response?.data?.error || err.message || 'Failed to add trip');
+      setError(err.response?.data?.error || t('admin.errors.addTrip'));
     }
   };
 
@@ -89,12 +92,12 @@ export default function AdminPage() {
       setEditingTrip(null);
     } catch (err: any) {
       console.error('Update trip error:', err);
-      setError(err.response?.data?.error || 'Failed to update trip');
+      setError(err.response?.data?.error || t('admin.errors.updateTrip'));
     }
   };
 
   const handleDeleteTrip = async (tripId: number) => {
-    if (!window.confirm('Are you sure you want to delete this trip?')) {
+    if (!window.confirm(t('admin.management.trips.deleteConfirm'))) {
       return;
     }
 
@@ -103,7 +106,7 @@ export default function AdminPage() {
       await api.delete(`/trips/${tripId}`);
       setTrips(trips.filter(trip => trip.id !== tripId));
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Failed to delete trip');
+      setError(err.response?.data?.error || t('admin.errors.deleteTrip'));
     }
   };
 
@@ -115,7 +118,7 @@ export default function AdminPage() {
       setDestinations([...destinations, response.data]);
       setIsAddingDestination(false);
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Failed to add destination');
+      setError(err.response?.data?.error || t('admin.errors.addDestination'));
     }
   };
 
@@ -126,12 +129,12 @@ export default function AdminPage() {
       setDestinations(destinations.map(dest => dest.id === editingDestination?.id ? response.data : dest));
       setEditingDestination(null);
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Failed to update destination');
+      setError(err.response?.data?.error || t('admin.errors.updateDestination'));
     }
   };
 
   const handleDeleteDestination = async (destinationId: number) => {
-    if (!window.confirm('Are you sure you want to delete this destination?')) {
+    if (!window.confirm(t('admin.management.destinations.deleteConfirm'))) {
       return;
     }
 
@@ -140,7 +143,7 @@ export default function AdminPage() {
       await api.delete(`/admin/destinations/${destinationId}`);
       setDestinations(destinations.filter(dest => dest.id !== destinationId));
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Failed to delete destination');
+      setError(err.response?.data?.error || t('admin.errors.deleteDestination'));
     }
   };
 
@@ -156,7 +159,7 @@ export default function AdminPage() {
       setTrips(tripsRes.data);
       setDestinations(destinationsRes.data);
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Failed to assign trip to destination');
+      setError(err.response?.data?.error || t('admin.errors.assignTrip'));
     }
   };
 
@@ -200,7 +203,7 @@ export default function AdminPage() {
       setError('');
     } catch (err: any) {
       console.error('Update status error:', err);
-      setError(err.response?.data?.error || 'Failed to update booking status');
+      setError(err.response?.data?.error || t('admin.errors.updateBookingStatus'));
     }
   };
 
@@ -215,7 +218,7 @@ export default function AdminPage() {
       setError('');
     } catch (err: any) {
       console.error('Update payment status error:', err);
-      setError(err.response?.data?.error || 'Failed to update payment status');
+      setError(err.response?.data?.error || t('admin.errors.updatePaymentStatus'));
     }
   };
 
@@ -226,7 +229,7 @@ export default function AdminPage() {
       setBookings(prevBookings => prevBookings.filter(booking => booking.id !== bookingId));
     } catch (err: any) {
       console.error('Delete booking error:', err);
-      setError(err.response?.data?.error || 'Failed to delete booking');
+      setError(err.response?.data?.error || t('admin.errors.deleteBooking'));
     }
   };
 
@@ -247,7 +250,7 @@ export default function AdminPage() {
       );
     } catch (err: any) {
       console.error('Update destination error:', err);
-      setError(err.response?.data?.error || 'Failed to update destination');
+      setError(err.response?.data?.error || t('admin.errors.updateDestinationTrip'));
     }
   };
 
@@ -255,8 +258,8 @@ export default function AdminPage() {
     const matchesStatus = filterStatus === 'all' || booking.status === filterStatus;
     const matchesPayment = filterPayment === 'all' || booking.paymentStatus === filterPayment;
     const matchesSearch = searchTerm === '' || 
-      booking.trip.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      booking.trip.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (booking.trip?.title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (booking.trip?.location || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
       (booking.user?.email || '').toLowerCase().includes(searchTerm.toLowerCase());
     return matchesStatus && matchesPayment && matchesSearch;
   });
@@ -275,21 +278,21 @@ export default function AdminPage() {
     <AdminRoute>
       <Layout>
         <Head>
-          <title>Admin Dashboard - Travel Agency</title>
+          <title>{t('admin.dashboard')} - {t('common.brand')}</title>
         </Head>
         <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
           <div className="container mx-auto px-4 py-12">
             {error && (
               <div className="mb-8 bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-xl shadow-sm relative" role="alert">
-                <strong className="font-semibold">Error: </strong>
+                <strong className="font-semibold">{t('admin.errors.title')}: </strong>
                 <span className="block sm:inline">{error}</span>
                 <button
                   className="absolute top-0 bottom-0 right-0 px-4 py-3 hover:text-red-800 transition-colors"
                   onClick={() => setError('')}
                 >
-                  <span className="sr-only">Dismiss</span>
+                  <span className="sr-only">{t('admin.errors.dismiss')}</span>
                   <svg className="fill-current h-5 w-5" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                    <title>Close</title>
+                    <title>{t('admin.errors.dismiss')}</title>
                     <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/>
                   </svg>
                 </button>
@@ -306,7 +309,7 @@ export default function AdminPage() {
                       : 'text-gray-600 hover:bg-gray-50 hover:text-secondary-500'
                   }`}
                 >
-                  Trips
+                  {t('admin.trips')}
                 </Button>
                 <Button
                   onClick={() => setActiveTab('destinations')}
@@ -316,7 +319,7 @@ export default function AdminPage() {
                       : 'text-gray-600 hover:bg-gray-50 hover:text-secondary-500'
                   }`}
                 >
-                  Destinations
+                  {t('admin.destinations')}
                 </Button>
                 <Button
                   onClick={() => setActiveTab('bookings')}
@@ -326,7 +329,17 @@ export default function AdminPage() {
                       : 'text-gray-600 hover:bg-gray-50 hover:text-secondary-500'
                   }`}
                 >
-                  Bookings
+                  {t('admin.bookings')}
+                </Button>
+                <Button
+                  onClick={() => setActiveTab('messages')}
+                  className={`flex-1 py-3 rounded-xl text-sm font-medium transition-all duration-300 ${
+                    activeTab === 'messages'
+                      ? 'bg-gradient-to-r from-secondary-500 to-secondary-400 text-white shadow-lg shadow-secondary-500/25 transform hover:-translate-y-0.5'
+                      : 'text-gray-600 hover:bg-gray-50 hover:text-secondary-500'
+                  }`}
+                >
+                  {t('admin.contact.title')}
                 </Button>
               </nav>
             </div>
@@ -335,10 +348,10 @@ export default function AdminPage() {
               <div>
                 <div className="mb-8">
                   <h2 className="text-3xl font-bold bg-gradient-to-r from-secondary-500 to-secondary-400 bg-clip-text text-transparent">
-                    Booking Management
+                    {t('admin.management.bookings.title')}
                   </h2>
                   <p className="mt-2 text-gray-600">
-                    Manage and review all customer bookings
+                    {t('admin.management.bookings.description')}
                   </p>
                 </div>
 
@@ -346,21 +359,21 @@ export default function AdminPage() {
                   <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
                     <div>
                       <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-2">
-                        Search
+                        {t('admin.management.bookings.search.label')}
                       </label>
                       <input
                         type="text"
                         id="search"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        placeholder="Search by trip, location, or email"
+                        placeholder={t('admin.management.bookings.search.placeholder')}
                         className="block w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 placeholder-gray-400 shadow-sm focus:border-secondary-500 focus:ring-2 focus:ring-secondary-200 focus:outline-none transition-all duration-200"
                       />
                     </div>
 
                     <div>
                       <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-2">
-                        Booking Status
+                        {t('admin.management.bookings.status.label')}
                       </label>
                       <select
                         id="status"
@@ -368,16 +381,16 @@ export default function AdminPage() {
                         onChange={(e) => setFilterStatus(e.target.value as BookingStatus | 'all')}
                         className="block w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 shadow-sm focus:border-secondary-500 focus:ring-2 focus:ring-secondary-200 focus:outline-none transition-all duration-200"
                       >
-                        <option value="all">All Statuses</option>
-                        <option value="pending">Pending</option>
-                        <option value="confirmed">Confirmed</option>
-                        <option value="cancelled">Cancelled</option>
+                        <option value="all">{t('admin.management.bookings.status.all')}</option>
+                        <option value="pending">{t('admin.management.bookings.status.pending')}</option>
+                        <option value="confirmed">{t('admin.management.bookings.status.confirmed')}</option>
+                        <option value="cancelled">{t('admin.management.bookings.status.cancelled')}</option>
                       </select>
                     </div>
 
                     <div>
                       <label htmlFor="payment" className="block text-sm font-medium text-gray-700 mb-2">
-                        Payment Status
+                        {t('admin.management.bookings.payment.label')}
                       </label>
                       <select
                         id="payment"
@@ -385,10 +398,10 @@ export default function AdminPage() {
                         onChange={(e) => setFilterPayment(e.target.value as PaymentStatus | 'all')}
                         className="block w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 shadow-sm focus:border-secondary-500 focus:ring-2 focus:ring-secondary-200 focus:outline-none transition-all duration-200"
                       >
-                        <option value="all">All Payments</option>
-                        <option value="pending">Pending</option>
-                        <option value="paid">Paid</option>
-                        <option value="refunded">Refunded</option>
+                        <option value="all">{t('admin.management.bookings.payment.all')}</option>
+                        <option value="pending">{t('admin.management.bookings.payment.pending')}</option>
+                        <option value="paid">{t('admin.management.bookings.payment.paid')}</option>
+                        <option value="refunded">{t('admin.management.bookings.payment.refunded')}</option>
                       </select>
                     </div>
                   </div>
@@ -406,7 +419,7 @@ export default function AdminPage() {
                   ))}
                   {filteredBookings.length === 0 && (
                     <div className="text-center py-16 bg-white rounded-2xl shadow-lg">
-                      <p className="text-gray-500">No bookings found matching your filters.</p>
+                      <p className="text-gray-500">{t('admin.management.bookings.noResults')}</p>
                     </div>
                   )}
                 </div>
@@ -418,10 +431,10 @@ export default function AdminPage() {
                 <div className="mb-8 flex justify-between items-center">
                   <div>
                     <h2 className="text-3xl font-bold bg-gradient-to-r from-secondary-500 to-secondary-400 bg-clip-text text-transparent">
-                      Trip Management
+                      {t('admin.management.trips.title')}
                     </h2>
                     <p className="mt-2 text-gray-600">
-                      Manage and organize your travel packages
+                      {t('admin.management.trips.description')}
                     </p>
                   </div>
                   <button
@@ -431,7 +444,7 @@ export default function AdminPage() {
                     <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                     </svg>
-                    Add New Trip
+                    {t('admin.management.trips.addNew')}
                   </button>
                 </div>
 
@@ -458,38 +471,38 @@ export default function AdminPage() {
                             onClick={() => handleViewTrip(trip.id)}
                             className="px-4 py-2 text-sm font-medium rounded-xl text-secondary-600 hover:text-white hover:bg-secondary-500 transition-all duration-200"
                           >
-                            View
+                            {t('admin.management.trips.view')}
                           </Button>
                           <Button
                             onClick={() => setEditingTrip(trip)}
                             className="px-4 py-2 text-sm font-medium rounded-xl text-secondary-600 hover:text-white hover:bg-secondary-500 transition-all duration-200"
                           >
-                            Edit
+                            {t('admin.management.trips.edit')}
                           </Button>
                           <Button
                             onClick={() => handleDeleteTrip(trip.id)}
                             className="px-4 py-2 text-sm font-medium rounded-xl text-red-600 hover:text-white hover:bg-red-500 transition-all duration-200"
                           >
-                            Delete
+                            {t('admin.management.trips.delete')}
                           </Button>
                         </div>
                       </div>
 
                       <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         <div className="bg-gray-50 rounded-xl p-4">
-                          <p className="text-sm font-medium text-gray-500">Price</p>
+                          <p className="text-sm font-medium text-gray-500">{t('admin.management.trips.price')}</p>
                           <p className="mt-1 text-lg font-semibold text-gray-900">
                             ${trip.price.toFixed(2)}
                           </p>
                         </div>
                         <div className="bg-gray-50 rounded-xl p-4">
-                          <p className="text-sm font-medium text-gray-500">Duration</p>
+                          <p className="text-sm font-medium text-gray-500">{t('admin.management.trips.duration')}</p>
                           <p className="mt-1 text-lg font-semibold text-gray-900">
-                            {trip.duration} days
+                            {t('admin.management.trips.durationDays', { count: trip.duration })}
                           </p>
                         </div>
                         <div className="bg-gray-50 rounded-xl p-4">
-                          <p className="text-sm font-medium text-gray-500">Location</p>
+                          <p className="text-sm font-medium text-gray-500">{t('admin.management.trips.location')}</p>
                           <p className="mt-1 text-lg font-semibold text-gray-900">
                             {trip.location}
                           </p>
@@ -517,10 +530,10 @@ export default function AdminPage() {
                 <div className="mb-8 flex justify-between items-center">
                   <div>
                     <h2 className="text-3xl font-bold bg-gradient-to-r from-secondary-500 to-secondary-400 bg-clip-text text-transparent">
-                      Destination Management
+                      {t('admin.management.destinations.title')}
                     </h2>
                     <p className="mt-2 text-gray-600">
-                      Manage and organize your travel destinations
+                      {t('admin.management.destinations.description')}
                     </p>
                   </div>
                   <button
@@ -530,7 +543,7 @@ export default function AdminPage() {
                     <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                     </svg>
-                    Add New Destination
+                    {t('admin.management.destinations.addNew')}
                   </button>
                 </div>
 
@@ -566,13 +579,13 @@ export default function AdminPage() {
                             onClick={() => setEditingDestination(destination)}
                             className="px-4 py-2 text-sm font-medium rounded-xl text-secondary-600 hover:text-white hover:bg-secondary-500 transition-all duration-200"
                           >
-                            Edit
+                            {t('admin.management.destinations.edit')}
                           </Button>
                           <Button
                             onClick={() => handleDeleteDestination(destination.id)}
                             className="px-4 py-2 text-sm font-medium rounded-xl text-red-600 hover:text-white hover:bg-red-500 transition-all duration-200"
                           >
-                            Delete
+                            {t('admin.management.destinations.delete')}
                           </Button>
                         </div>
                       </div>
@@ -582,7 +595,7 @@ export default function AdminPage() {
                       </div>
 
                       <div className="mt-6">
-                        <h4 className="text-sm font-medium text-gray-700 mb-2">Associated Trips</h4>
+                        <h4 className="text-sm font-medium text-gray-700 mb-2">{t('admin.management.destinations.associatedTrips')}</h4>
                         <div className="flex flex-wrap gap-2">
                           {trips
                             .filter((trip) => trip.destinationId === destination.id)
@@ -599,6 +612,21 @@ export default function AdminPage() {
                     </div>
                   ))}
                 </div>
+              </div>
+            )}
+
+            {activeTab === 'messages' && (
+              <div>
+                <div className="mb-8">
+                  <h2 className="text-3xl font-bold bg-gradient-to-r from-secondary-500 to-secondary-400 bg-clip-text text-transparent">
+                    {t('admin.contact.title')}
+                  </h2>
+                  <p className="mt-2 text-gray-600">
+                    {t('admin.contact.description')}
+                  </p>
+                </div>
+
+                <ContactMessages />
               </div>
             )}
           </div>

@@ -38,6 +38,10 @@ module.exports = {
       },
       spacing: {
         '128': '32rem',
+        'safe-top': 'env(safe-area-inset-top)',
+        'safe-bottom': 'env(safe-area-inset-bottom)',
+        'safe-left': 'env(safe-area-inset-left)',
+        'safe-right': 'env(safe-area-inset-right)',
       },
       height: {
         'screen-90': '90vh',
@@ -66,5 +70,24 @@ module.exports = {
   },
   plugins: [
     require('@tailwindcss/forms'),
+    function({ addUtilities }) {
+      const newUtilities = {
+        '.rtl': {
+          direction: 'rtl',
+          textAlign: 'right',
+        },
+        '.ltr': {
+          direction: 'ltr',
+          textAlign: 'left',
+        },
+        '.flip': {
+          transform: 'scaleX(-1)',
+        },
+        '.no-flip': {
+          transform: 'none',
+        },
+      }
+      addUtilities(newUtilities)
+    },
   ],
 };

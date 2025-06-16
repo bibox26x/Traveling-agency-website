@@ -2,6 +2,8 @@ import React from 'react';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Layout from '../../components/layout/Layout';
 import TripCard from '../../components/TripCard';
 import { Destination } from '../../types/destination';
@@ -12,10 +14,12 @@ interface DestinationDetailsProps {
 }
 
 const DestinationDetails: React.FC<DestinationDetailsProps> = ({ destination }) => {
+  const { t } = useTranslation('common');
+
   return (
     <Layout fullWidth>
       <Head>
-        <title>{destination.name} - Travel Agency</title>
+        <title>{t('meta.destinations.title', { destination: destination.name })}</title>
         <meta name="description" content={destination.description} />
       </Head>
 
@@ -58,20 +62,22 @@ const DestinationDetails: React.FC<DestinationDetailsProps> = ({ destination }) 
       <section className="py-16 bg-gray-50">
         <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <span className="text-secondary-500 font-semibold text-lg mb-2 block animate-fade-in">Explore</span>
+            <span className="text-secondary-500 font-semibold text-lg mb-2 block animate-fade-in">
+              {t('destinationDetails.availableTrips.label')}
+            </span>
             <h2 className="text-4xl font-display font-bold text-gray-900 mb-4 animate-fade-in">
-              Available Trips
+              {t('destinationDetails.availableTrips.title')}
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto animate-slide-in">
-              Choose from our selection of amazing adventures in {destination.name}
+              {t('destinationDetails.availableTrips.subtitle', { destination: destination.name })}
             </p>
           </div>
 
           {destination.trips.length === 0 ? (
             <div className="text-center py-12 animate-fade-in">
               <div className="text-5xl mb-4">✈️</div>
-              <p className="text-xl text-gray-500">No trips available at the moment.</p>
-              <p className="text-gray-400">Please check back later for exciting new adventures!</p>
+              <p className="text-xl text-gray-500">{t('destinationDetails.availableTrips.noTrips.title')}</p>
+              <p className="text-gray-400">{t('destinationDetails.availableTrips.noTrips.subtitle')}</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -92,7 +98,7 @@ const DestinationDetails: React.FC<DestinationDetailsProps> = ({ destination }) 
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps = async ({ params, locale }) => {
   try {
     const id = Number(params?.id);
     if (isNaN(id)) {
@@ -107,6 +113,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 
     return {
       props: {
+        ...(await serverSideTranslations(locale || 'en', ['common'])),
         destination,
       },
     };

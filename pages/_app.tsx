@@ -1,14 +1,22 @@
 import type { AppProps } from 'next/app';
+import { appWithTranslation } from 'next-i18next';
 import { AuthProvider } from '../context/AuthContext';
-import { HeroUIProvider } from '@heroui/react';
+import DirectionLayout from '../components/layout/DirectionLayout';
 import '../styles/globals.css';
 
-export default function App({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <HeroUIProvider>
     <AuthProvider>
-      <Component {...pageProps} />
+      <DirectionLayout>
+        <Component {...pageProps} />
+      </DirectionLayout>
     </AuthProvider>
-    </HeroUIProvider>
   );
 }
+
+const AppWithTranslation = appWithTranslation(MyApp);
+
+// Import i18n after wrapping with appWithTranslation
+import '../i18n';
+
+export default AppWithTranslation;

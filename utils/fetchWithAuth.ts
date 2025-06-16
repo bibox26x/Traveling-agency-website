@@ -1,35 +1,45 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+import api from '../services/api';
+import { AxiosRequestConfig } from 'axios';
 
 export const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
   try {
-    const token = localStorage.getItem('accessToken');
+    const method = options.method?.toLowerCase() || 'get';
     
-    const headers = new Headers(options.headers);
-    if (token) {
-      headers.set('Authorization', `Bearer ${token}`);
+    // Convert Headers to plain object
+    const headers: Record<string, string> = {};
+    if (options.headers) {
+      if (options.headers instanceof Headers) {
+        options.headers.forEach((value, key) => {
+          headers[key] = value;
+        });
+      } else if (Array.isArray(options.headers)) {
+        options.headers.forEach(([key, value]) => {
+          headers[key] = value;
+        });
+      } else if (typeof options.headers === 'object') {
+        Object.assign(headers, options.headers);
+      }
     }
 
-    if (options.body && !headers.has('Content-Type')) {
-      headers.set('Content-Type', 'application/json');
-    }
-
-    // Ensure the URL starts with a slash
-    const apiUrl = url.startsWith('/') ? url : `/${url}`;
-
-    const response = await fetch(`${API_BASE_URL}${apiUrl}`, {
-      ...options,
+    const config: AxiosRequestConfig = {
       headers,
-    });
+      ...(options.body && { data: JSON.parse(options.body.toString()) }),
+    };
 
-    // Handle 401 Unauthorized globally
-    if (response.status === 401) {
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('user');
-      window.location.href = '/login?redirect=' + window.location.pathname;
-      throw new Error('Please log in to continue');
+    switch (method) {
+      case 'get':
+        return api.get(url, config);
+      case 'post':
+        return api.post(url, config.data, config);
+      case 'put':
+        return api.put(url, config.data, config);
+      case 'delete':
+        return api.delete(url, config);
+      case 'patch':
+        return api.patch(url, config.data, config);
+      default:
+        throw new Error(`Unsupported method: ${method}`);
     }
-
-    return response;
   } catch (error) {
     if (error instanceof TypeError && error.message === 'Failed to fetch') {
       throw new Error('Unable to connect to the server. Please check your internet connection.');

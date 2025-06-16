@@ -3,376 +3,309 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import type { Booking } from '../types/booking';
 import api from '../services/api';
-import { Button } from '@heroui/react';
+import { useTranslation } from 'next-i18next';
+import { useAuth } from '../context/AuthContext';
+import { withAuth } from '../components/hoc/withAuth';
+import { GetStaticProps } from 'next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Layout from '../components/layout/Layout';
+import Head from 'next/head';
 
-interface UserProfile {
-  id: string;
-  email: string;
-  name: string;
-  phone?: string;
-  address?: string;
-  preferences: {
-    notifications: boolean;
-    newsletter: boolean;
-  };
-}
-
-export default function ProfilePage() {
-  const router = useRouter();
-  const [profile, setProfile] = useState<UserProfile | null>(null);
+function ProfilePage() {
+  const { t } = useTranslation('common');
+  const { user } = useAuth();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState<UserProfile>({
-    id: '',
-    email: '',
-    name: '',
-    preferences: {
-      notifications: false,
-      newsletter: false
-    }
-  });
+  const [activeSection, setActiveSection] = useState<'settings' | 'bookings'>('settings');
 
   useEffect(() => {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : '';
-    if (!token) {
-      router.push('/login');
-      return;
-    }
-
-    const fetchData = async () => {
+    const fetchBookings = async () => {
       try {
-        const [profileRes, bookingsRes] = await Promise.all([
-          api.get('/users/profile', {
-            headers: { Authorization: `Bearer ${token}` }
-          }),
-          api.get('/bookings', {
-            headers: { Authorization: `Bearer ${token}` }
-          })
-        ]);
-
-        setProfile(profileRes.data);
-        setFormData(profileRes.data);
-        setBookings(bookingsRes.data);
-      } catch (err) {
-        setError('Failed to load profile data');
+        const response = await api.get('/api/bookings');
+        setBookings(response.data);
+      } catch (error) {
+        console.error('Failed to fetch bookings:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchData();
-  }, [router]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
-    if (type === 'checkbox') {
-      setFormData(prev => ({
-        ...prev,
-        preferences: {
-          ...prev.preferences,
-          [name]: checked
-        }
-      }));
-    } else {
-      setFormData(prev => ({
-        ...prev,
-        [name]: value
-      }));
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const token = localStorage.getItem('token');
-
-    try {
-      const res = await api.put('/users/profile', formData, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setProfile(res.data);
-      setIsEditing(false);
-      setError('');
-    } catch (err) {
-      setError('Failed to update profile');
-    }
-  };
-
-  const handleCancel = () => {
-    setIsEditing(false);
-    if (profile) {
-      setFormData(profile);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500 border-solid"></div>
-      </div>
-    );
-  }
+    fetchBookings();
+  }, []);
 
   return (
-    <div className="container mx-auto px-4 py-12">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-blue-700 mb-8">My Profile</h1>
+    <Layout>
+      <Head>
+        <title>{t('pages.profile.title')} - {t('common.brand')}</title>
+        <meta name="description" content={t('profile.meta.description')} />
+      </Head>
 
-        {error && (
-          <div className="mb-8 p-4 bg-red-50 text-red-700 rounded-md">
-            {error}
+      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50">
+        <div className="container mx-auto px-4 py-8 pt-24">
+          <div className="mb-8">
+            <h1 className="text-4xl font-display font-bold text-gray-900">
+              {t('pages.profile.title')}
+            </h1>
+            <p className="mt-2 text-lg text-gray-600">
+              {t('profile.subtitle')}
+            </p>
           </div>
-        )}
-
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          {isEditing ? (
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    className="block w-full rounded-lg border border-primary-500 bg-white px-4 py-2 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-600 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    className="block w-full rounded-lg border border-primary-500 bg-white px-4 py-2 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-600 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Phone
-                  </label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone || ''}
-                    onChange={handleChange}
-                    className="block w-full rounded-lg border border-primary-500 bg-white px-4 py-2 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-600 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Address
-                  </label>
-                  <input
-                    type="text"
-                    name="address"
-                    value={formData.address || ''}
-                    onChange={handleChange}
-                    className="block w-full rounded-lg border border-primary-500 bg-white px-4 py-2 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-600 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <label className="flex items-center">
-                  <input
-                    type="checkbox"
-                    name="notifications"
-                    checked={formData.preferences.notifications}
-                    onChange={handleChange}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
-                  <span className="ml-2 text-sm text-gray-700">
-                    Receive booking notifications
-                  </span>
-                </label>
-
-                <label className="flex items-center">
-                  <input
-                    type="checkbox"
-                    name="newsletter"
-                    checked={formData.preferences.newsletter}
-                    onChange={handleChange}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
-                  <span className="ml-2 text-sm text-gray-700">
-                    Subscribe to newsletter
-                  </span>
-                </label>
-              </div>
-
-              <div className="flex justify-end gap-4">
-                <button
-                  type="button"
-                  onClick={handleCancel}
-                  className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                >
-                  Save Changes
-                </button>
-              </div>
-            </form>
-          ) : (
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <h3 className="text-sm font-medium text-gray-500">Name</h3>
-                  <p className="mt-1">{profile?.name}</p>
-                </div>
-
-                <div>
-                  <h3 className="text-sm font-medium text-gray-500">Email</h3>
-                  <p className="mt-1">{profile?.email}</p>
-                </div>
-
-                <div>
-                  <h3 className="text-sm font-medium text-gray-500">Phone</h3>
-                  <p className="mt-1">{profile?.phone || 'Not provided'}</p>
-                </div>
-
-                <div>
-                  <h3 className="text-sm font-medium text-gray-500">Address</h3>
-                  <p className="mt-1">{profile?.address || 'Not provided'}</p>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex items-center">
-                  <span className="text-sm font-medium text-gray-500 mr-2">Notifications:</span>
-                  <span className={profile?.preferences.notifications ? 'text-green-600' : 'text-red-600'}>
-                    {profile?.preferences.notifications ? 'Enabled' : 'Disabled'}
-                  </span>
-                </div>
-
-                <div className="flex items-center">
-                  <span className="text-sm font-medium text-gray-500 mr-2">Newsletter:</span>
-                  <span className={profile?.preferences.newsletter ? 'text-green-600' : 'text-red-600'}>
-                    {profile?.preferences.newsletter ? 'Subscribed' : 'Not subscribed'}
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex justify-end">
-                <Button
-                  onClick={() => setIsEditing(true)}
-                  color="primary"
-                  variant="solid"
-                  size="md"
-                  className="bg-gradient-to-r from-primary-500 to-primary-600 shadow-md hover:shadow-primary-500/20 hover:-translate-y-0.5 active:translate-y-0 transform transition-all duration-200"
-                >
-                  Edit Profile
-                </Button>
+          
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {/* Sidebar Navigation */}
+            <div className="md:col-span-1">
+              <div className="bg-white rounded-2xl shadow-lg p-6 sticky top-24">
+                <nav className="space-y-2">
+                  <button 
+                    onClick={() => setActiveSection('settings')}
+                    className={`w-full text-left px-4 py-3 rounded-xl transition-all duration-200 ${
+                      activeSection === 'settings' 
+                        ? 'bg-primary-50 text-primary-700 font-medium' 
+                        : 'hover:bg-gray-50 text-gray-600 hover:text-gray-900'
+                    }`}
+                  >
+                    {t('pages.profile.settings.title')}
+                  </button>
+                  <button 
+                    onClick={() => setActiveSection('bookings')}
+                    className={`w-full text-left px-4 py-3 rounded-xl transition-all duration-200 ${
+                      activeSection === 'bookings' 
+                        ? 'bg-primary-50 text-primary-700 font-medium' 
+                        : 'hover:bg-gray-50 text-gray-600 hover:text-gray-900'
+                    }`}
+                  >
+                    {t('pages.profile.bookings.title')}
+                  </button>
+                </nav>
               </div>
             </div>
-          )}
-        </div>
 
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold text-blue-700 mb-6">My Bookings</h2>
-
-          {bookings.length === 0 ? (
-            <div className="text-center text-gray-600 py-8">
-              <p className="mb-4">You haven't made any bookings yet.</p>
-              <Link
-                href="/destinations"
-                className="text-secondary-500 hover:text-secondary-600 font-semibold flex items-center gap-2"
-              >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
-                Browse Destinations
-              </Link>
-            </div>
-          ) : (
-            <div className="space-y-6">
-              {bookings.map(booking => (
-                <div
-                  key={booking.id}
-                  className="border border-gray-200 rounded-lg p-4"
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold">{booking.trip.title}</h3>
-                    <div className="flex gap-2">
-                      <span className={`
-                        px-3 py-1 rounded-full text-sm font-medium
-                        ${booking.status === 'confirmed' ? 'bg-green-100 text-green-800' :
-                          booking.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                          'bg-red-100 text-red-800'}
-                      `}>
-                        {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
-                      </span>
-                      <span className={`
-                        px-3 py-1 rounded-full text-sm font-medium
-                        ${booking.paymentStatus === 'paid' ? 'bg-green-100 text-green-800' :
-                          booking.paymentStatus === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                          'bg-gray-100 text-gray-800'}
-                      `}>
-                        {booking.paymentStatus.charAt(0).toUpperCase() + booking.paymentStatus.slice(1)}
-                      </span>
+            {/* Main Content */}
+            <div className="md:col-span-3">
+              <div className="bg-white rounded-2xl shadow-lg p-8">
+                {activeSection === 'settings' ? (
+                  /* Profile Settings */
+                  <div>
+                    <div className="border-b border-gray-200 pb-6 mb-6">
+                      <h2 className="text-2xl font-semibold text-gray-900">
+                        {t('pages.profile.settings.title')}
+                      </h2>
+                      <p className="mt-1 text-gray-600">
+                        {t('pages.profile.settings.description')}
+                      </p>
                     </div>
-                  </div>
 
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <span className="font-medium">Location:</span>
-                      <span className="ml-2">{booking.trip.location}</span>
-                    </div>
-                    <div>
-                      <span className="font-medium">Dates:</span>
-                      <div className="text-sm text-gray-600">
-                        {new Date(booking.trip.startDate).toLocaleDateString()} - {' '}
-                        {new Date(booking.trip.startDate + booking.trip.duration * 24 * 60 * 60 * 1000).toLocaleDateString()}
+                    <div className="space-y-6">
+                      {/* Personal Information */}
+                      <div>
+                        <h3 className="text-lg font-medium text-gray-900 mb-4">
+                          {t('pages.profile.personalInfo.title')}
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              {t('pages.profile.personalInfo.name')}
+                            </label>
+                            <input
+                              type="text"
+                              value={user?.name || ''}
+                              readOnly
+                              className="block w-full rounded-lg border-gray-300 bg-gray-50 px-4 py-2.5"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              {t('pages.profile.personalInfo.email')}
+                            </label>
+                            <input
+                              type="email"
+                              value={user?.email || ''}
+                              readOnly
+                              className="block w-full rounded-lg border-gray-300 bg-gray-50 px-4 py-2.5"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Preferences */}
+                      <div>
+                        <h3 className="text-lg font-medium text-gray-900 mb-4">
+                          {t('profile.preferences')}
+                        </h3>
+                        <div className="space-y-4">
+                          {/* Language */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              {t('pages.profile.settings.language')}
+                            </label>
+                            <select className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 py-2.5">
+                              <option value="en">{t('languages.english')}</option>
+                              <option value="fr">{t('languages.french')}</option>
+                              <option value="ar">{t('languages.arabic')}</option>
+                            </select>
+                          </div>
+
+                          {/* Currency */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              {t('pages.profile.settings.currency')}
+                            </label>
+                            <select className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 py-2.5">
+                              <option value="USD">USD</option>
+                              <option value="EUR">EUR</option>
+                              <option value="GBP">GBP</option>
+                            </select>
+                          </div>
+
+                          {/* Notifications */}
+                          <div className="space-y-3">
+                            <label className="flex items-center space-x-3">
+                              <input type="checkbox" className="form-checkbox h-5 w-5 text-primary-600 rounded" />
+                              <span className="text-gray-700">{t('profile.emailNotifications')}</span>
+                            </label>
+                            <label className="flex items-center space-x-3">
+                              <input type="checkbox" className="form-checkbox h-5 w-5 text-primary-600 rounded" />
+                              <span className="text-gray-700">{t('profile.smsNotifications')}</span>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Privacy Settings */}
+                      <div>
+                        <h3 className="text-lg font-medium text-gray-900 mb-4">
+                          {t('pages.profile.settings.privacy')}
+                        </h3>
+                        <div className="space-y-3">
+                          <label className="flex items-center space-x-3">
+                            <input type="checkbox" className="form-checkbox h-5 w-5 text-primary-600 rounded" />
+                            <span className="text-gray-700">{t('pages.profile.settings.showProfile')}</span>
+                          </label>
+                          <label className="flex items-center space-x-3">
+                            <input type="checkbox" className="form-checkbox h-5 w-5 text-primary-600 rounded" />
+                            <span className="text-gray-700">{t('pages.profile.settings.publicBookings')}</span>
+                          </label>
+                        </div>
+                      </div>
+
+                      {/* Save Button */}
+                      <div className="pt-6 border-t border-gray-200">
+                        <button className="w-full sm:w-auto px-8 py-3 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 text-white font-medium shadow-lg shadow-primary-500/25 hover:shadow-primary-500/35 hover:-translate-y-0.5 transform transition-all duration-200">
+                          {t('ui.form.save')}
+                        </button>
                       </div>
                     </div>
-                    <div>
-                      <span className="font-medium">Participants:</span>
-                      <div className="text-sm text-gray-600">
-                        Participants: {booking.guests}
+                  </div>
+                ) : (
+                  /* Bookings Section */
+                  <div>
+                    <div className="border-b border-gray-200 pb-6 mb-6">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h2 className="text-2xl font-semibold text-gray-900">
+                            {t('pages.profile.bookings.title')}
+                          </h2>
+                          <p className="mt-1 text-gray-600">
+                            {t('pages.profile.bookings.description')}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                    <div>
-                      <span className="font-medium">Total Price:</span>
-                      <span className="ml-2">${booking.totalPrice}</span>
+
+                    <div className="space-y-6">
+                      {loading ? (
+                        <div className="flex justify-center items-center py-8">
+                          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600"></div>
+                        </div>
+                      ) : bookings.length === 0 ? (
+                        <div className="text-center py-8">
+                          <p className="text-gray-600">{t('bookings.noBookings')}</p>
+                          <Link 
+                            href="/destinations" 
+                            className="mt-4 inline-block text-primary-600 hover:text-primary-700 font-medium"
+                          >
+                            {t('destinations.exploreDestination')}
+                          </Link>
+                        </div>
+                      ) : (
+                        <div className="space-y-4">
+                          {bookings.map((booking) => (
+                            <div 
+                              key={booking.id} 
+                              className="border border-gray-200 rounded-xl p-6 hover:border-primary-500 transition-colors duration-200"
+                            >
+                              <div className="flex justify-between items-start">
+                                <div>
+                                  <h3 className="font-medium text-gray-900">
+                                    {t('bookings.details.tripName')}: {booking.trip?.title || t('bookings.details.tripNotFound')}
+                                  </h3>
+                                  <p className="text-sm text-gray-600">
+                                    {t('bookings.details.bookingId')}: #{booking.id}
+                                  </p>
+                                  <p className="text-sm text-gray-600 mt-1">
+                                    {t('bookings.details.dates')}: {new Date(booking.bookingDate).toLocaleDateString()}
+                                  </p>
+                                  <p className="text-sm text-gray-600">
+                                    {t('bookings.details.participants')}: {booking.guests}
+                                  </p>
+                                  <p className="text-sm text-gray-600">
+                                    {t('bookings.details.duration')}: {booking.trip?.duration || t('bookings.details.durationNotAvailable')}
+                                  </p>
+                                  <p className="text-sm text-gray-600">
+                                    {t('bookings.details.totalPrice')}: ${booking.totalPrice}
+                                  </p>
+                                </div>
+                                <div className="text-right space-y-2">
+                                  <div className="flex flex-col gap-2">
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-sm text-gray-600">{t('bookings.bookingStatus')}:</span>
+                                      <span className={`px-3 py-1 rounded-full text-sm font-medium border ${
+                                        booking.status === 'confirmed' 
+                                          ? 'bg-green-50 text-green-800 border-green-200'
+                                          : booking.status === 'cancelled'
+                                          ? 'bg-red-50 text-red-800 border-red-200'
+                                          : 'bg-yellow-50 text-yellow-800 border-yellow-200'
+                                      }`}>
+                                        {t(`bookings.status.${booking.status}`)}
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-sm text-gray-600">{t('bookings.paymentStatusTitle')}:</span>
+                                      <span className={`px-3 py-1 rounded-full text-sm font-medium border ${
+                                        booking.paymentStatus === 'paid'
+                                          ? 'bg-green-50 text-green-800 border-green-200'
+                                          : booking.paymentStatus === 'refunded'
+                                          ? 'bg-gray-50 text-gray-800 border-gray-200'
+                                          : 'bg-yellow-50 text-yellow-800 border-yellow-200'
+                                      }`}>
+                                        {t(`bookings.paymentStatus.${booking.paymentStatus}`)}
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
-
-                  {booking.specialRequirements && (
-                    <div className="mt-4 text-sm">
-                      <span className="font-medium">Special Requirements:</span>
-                      <p className="mt-1 text-gray-600">{booking.specialRequirements}</p>
-                    </div>
-                  )}
-
-                  <div className="mt-4 flex justify-end">
-                    <Link
-                      href={`/trips/${booking.trip.id}`}
-                      className="text-blue-600 hover:text-blue-800 font-medium"
-                    >
-                      View Trip Details
-                    </Link>
-                  </div>
-                </div>
-              ))}
+                )}
+              </div>
             </div>
-          )}
+          </div>
         </div>
       </div>
-    </div>
+    </Layout>
   );
-} 
+}
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale ?? 'en', ['common'])),
+    },
+  };
+};
+
+export default withAuth(ProfilePage); 

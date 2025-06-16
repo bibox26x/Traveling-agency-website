@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Head from 'next/head';
+import { GetStaticProps } from 'next';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Layout from '../components/layout/Layout';
 import Button from '../components/ui/Button';
 import { useAuth } from '../context/AuthContext';
@@ -10,6 +13,7 @@ import { ApiErrorResponse } from '../types/api';
 export default function Login() {
   const router = useRouter();
   const { login } = useAuth();
+  const { t } = useTranslation('common', { useSuspense: false });
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
@@ -24,14 +28,19 @@ export default function Login() {
     try {
       await login(email, password, rememberMe);
       const redirect = router.query.redirect as string;
-      router.push(redirect || '/');
+      // Only redirect to internal paths
+      if (redirect && redirect.startsWith('/') && !redirect.startsWith('//')) {
+        await router.push(redirect);
+      } else {
+        await router.push('/');
+      }
     } catch (err: any) {
       if (err instanceof Error) {
         setError(err.message);
       } else if (err.response?.data?.message) {
         setError(err.response.data.message);
       } else {
-        setError('An unexpected error occurred. Please try again.');
+        setError(t('errors.unexpectedError'));
       }
       console.error('Login error:', err);
     } finally {
@@ -42,18 +51,17 @@ export default function Login() {
   return (
     <Layout>
       <Head>
-        <title>Login - Travel Agency</title>
+        <title>{t('auth.loginTitle') + ' - ' + t('common.brand')}</title>
       </Head>
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 via-white to-secondary-50 py-12 px-4 sm:px-6 lg:px-8">
         <div className="w-full max-w-md">
           <div className="bg-white shadow-2xl rounded-3xl px-8 py-10 sm:px-10 sm:py-12">
             <div className="flex flex-col items-center mb-8">
-
               <h2 className="text-2xl sm:text-3xl font-display font-bold tracking-tight text-gray-900 text-center mb-2">
-                Welcome back
+                {t('auth.loginTitle')}
               </h2>
               <p className="text-base text-gray-600 text-center">
-                Sign in to your account to continue
+                {t('auth.loginSubtitle')}
               </p>
             </div>
 
@@ -76,7 +84,7 @@ export default function Login() {
               <div className="space-y-4">
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                    Email address
+                    {t('ui.form.email')}
                   </label>
                   <input
                     id="email"
@@ -87,13 +95,14 @@ export default function Login() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
-                    placeholder="Enter your email"
+                    placeholder={t('auth.emailPlaceholder')}
+                    suppressHydrationWarning
                   />
                 </div>
 
                 <div>
                   <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                    Password
+                    {t('ui.form.password')}
                   </label>
                   <input
                     id="password"
@@ -104,7 +113,8 @@ export default function Login() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
-                    placeholder="Enter your password"
+                    placeholder={t('auth.passwordPlaceholder')}
+                    suppressHydrationWarning
                   />
                 </div>
 
@@ -117,15 +127,16 @@ export default function Login() {
                       checked={rememberMe}
                       onChange={(e) => setRememberMe(e.target.checked)}
                       className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                      suppressHydrationWarning
                     />
                     <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
-                      Remember me
+                      {t('auth.rememberMe')}
                     </label>
                   </div>
 
                   <div className="text-sm">
                     <Link href="/forgot-password" className="font-medium text-primary-600 hover:text-primary-500 transition">
-                      Forgot your password?
+                      {t('auth.forgotPassword')}
                     </Link>
                   </div>
                 </div>
@@ -139,15 +150,15 @@ export default function Login() {
                   isLoading={isLoading}
                   className="rounded-lg text-base py-2.5 font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
                 >
-                  Sign in
+                  {t('auth.loginTitle')}
                 </Button>
               </div>
 
               <div className="text-center">
                 <p className="text-sm text-gray-600">
-                  Don't have an account?{' '}
+                  {t('auth.noAccount')}{' '}
                   <Link href="/register" className="font-medium text-primary-600 hover:text-primary-500 transition">
-                    Sign up
+                    {t('auth.createAccount')}
                   </Link>
                 </p>
               </div>
@@ -158,3 +169,11 @@ export default function Login() {
     </Layout>
   );
 }
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale || 'en', ['common'])),
+    },
+  };
+};

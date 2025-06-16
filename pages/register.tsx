@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Head from 'next/head';
+import { GetStaticProps } from 'next';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Layout from '../components/layout/Layout';
 import Button from '../components/ui/Button';
 import { useAuth } from '../context/AuthContext';
@@ -10,6 +13,7 @@ import { ApiErrorResponse } from '../types/api';
 export default function Register() {
   const router = useRouter();
   const { register } = useAuth();
+  const { t } = useTranslation('common', { useSuspense: false });
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -28,13 +32,13 @@ export default function Register() {
     setIsLoading(true);
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      setError(t('auth.passwordMismatch'));
       setIsLoading(false);
       return;
     }
 
     if (!validatePassword(password)) {
-      setError('Password must be at least 6 characters long');
+      setError(t('auth.passwordRequirements'));
       setIsLoading(false);
       return;
     }
@@ -55,7 +59,7 @@ export default function Register() {
       } else if (err.response?.data?.message) {
         setError(err.response.data.message);
       } else {
-        setError('Failed to register. Please try again.');
+        setError(t('errors.serverError'));
       }
     } finally {
       setIsLoading(false);
@@ -65,19 +69,18 @@ export default function Register() {
   return (
     <Layout>
       <Head>
-        <title>Register - Travel Agency</title>
+        <title>{t('auth.registerTitle') + ' - ' + t('common.brand')}</title>
       </Head>
 
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 via-white to-secondary-50 py-12 px-4 sm:px-6 lg:px-8">
         <div className="w-full max-w-md">
           <div className="bg-white shadow-2xl rounded-3xl px-8 py-10 sm:px-10 sm:py-12">
             <div className="flex flex-col items-center mb-8">
-
               <h2 className="text-2xl sm:text-3xl font-display font-bold tracking-tight text-gray-900 text-center mb-2">
-                Create your account
+                {t('auth.registerTitle')}
               </h2>
               <p className="text-base text-gray-600 text-center">
-                Start your journey with us today
+                {t('auth.registerSubtitle')}
               </p>
             </div>
 
@@ -100,7 +103,7 @@ export default function Register() {
               <div className="space-y-4">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                    Full name
+                    {t('auth.firstName')}
                   </label>
                   <input
                     id="name"
@@ -111,13 +114,13 @@ export default function Register() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     className="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
-                    placeholder="Enter your full name"
+                    placeholder={t('ui.form.placeholders.name')}
                   />
                 </div>
 
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                    Email address
+                    {t('ui.form.email')}
                   </label>
                   <input
                     id="email"
@@ -128,13 +131,13 @@ export default function Register() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
-                    placeholder="Enter your email"
+                    placeholder={t('auth.emailPlaceholder')}
                   />
                 </div>
 
                 <div>
                   <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                    Password
+                    {t('ui.form.password')}
                   </label>
                   <input
                     id="password"
@@ -145,14 +148,14 @@ export default function Register() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
-                    placeholder="Create a password"
+                    placeholder={t('auth.passwordPlaceholder')}
                   />
-                  <p className="mt-1 text-xs text-gray-500">Must be at least 6 characters long</p>
+                  <p className="mt-1 text-xs text-gray-500">{t('auth.passwordRequirements')}</p>
                 </div>
 
                 <div>
                   <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
-                    Confirm password
+                    {t('auth.confirmPassword')}
                   </label>
                   <input
                     id="confirmPassword"
@@ -163,7 +166,7 @@ export default function Register() {
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     className="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
-                    placeholder="Confirm your password"
+                    placeholder={t('auth.passwordPlaceholder')}
                   />
                 </div>
 
@@ -177,7 +180,7 @@ export default function Register() {
                     className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
                   />
                   <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
-                    Remember me
+                    {t('auth.rememberMe')}
                   </label>
                 </div>
               </div>
@@ -191,15 +194,15 @@ export default function Register() {
                   className="rounded-lg text-base py-2.5 font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
                   disabled={!validatePassword(password) || password !== confirmPassword}
                 >
-                  Create account
+                  {t('auth.createAccount')}
                 </Button>
               </div>
 
               <div className="text-center">
                 <p className="text-sm text-gray-600">
-                  Already have an account?{' '}
+                  {t('auth.hasAccount')}{' '}
                   <Link href="/login" className="font-medium text-primary-600 hover:text-primary-500 transition">
-                    Sign in
+                    {t('auth.loginTitle')}
                   </Link>
                 </p>
               </div>
@@ -210,3 +213,11 @@ export default function Register() {
     </Layout>
   );
 }
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale || 'en', ['common'])),
+    },
+  };
+};

@@ -1,4 +1,5 @@
 import { Trip } from './trip';
+import { User } from './user';
 
 export type BookingStatus = 'pending' | 'confirmed' | 'cancelled';
 export type PaymentStatus = 'pending' | 'paid' | 'refunded';
@@ -12,14 +13,13 @@ export interface Booking {
   totalPrice: number;
   status: BookingStatus;
   paymentStatus: PaymentStatus;
-  bookingDate: string;
   specialRequirements?: string;
-  trip: Trip;
-  user: {
-    id: number;
-    name: string;
-    email: string;
-  };
+  bookingDate: Date;
+  createdAt: Date;
+  updatedAt: Date;
+  expiresAt: Date | null;
+  trip?: Trip;
+  user?: User;
 }
 
 export interface Payment {

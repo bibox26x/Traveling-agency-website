@@ -51,7 +51,7 @@ export default function TripCard({ trip }: Props) {
             {formattedStartDate} - {formattedEndDate}
           </span>
           <span className="bg-blue-50 px-2 py-1 rounded">
-            {duration} {duration === 1 ? 'day' : 'days'}
+            {duration} days
           </span>
         </div>
 

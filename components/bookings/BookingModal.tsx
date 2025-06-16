@@ -3,6 +3,8 @@ import { useAuth } from '../../context/AuthContext';
 import { fetchWithAuth } from '../../utils/fetchWithAuth';
 import { Trip } from '../../types/trip';
 import { Button } from '@heroui/react';
+import { useTranslation } from 'next-i18next';
+import clsx from 'clsx';
 
 interface BookingModalProps {
   trip: Trip;
@@ -13,6 +15,8 @@ interface BookingModalProps {
 
 export default function BookingModal({ trip, isOpen, onClose, onSuccess }: BookingModalProps) {
   const { user } = useAuth();
+  const { t, i18n } = useTranslation('common');
+  const isRTL = i18n.language === 'ar';
   const [guests, setGuests] = useState(1);
   const [specialRequirements, setSpecialRequirements] = useState('');
   const [loading, setLoading] = useState(false);
@@ -33,14 +37,14 @@ export default function BookingModal({ trip, isOpen, onClose, onSuccess }: Booki
         method: 'POST',
         body: JSON.stringify({
           tripId: trip.id,
-          guests,
+          numberOfPeople: guests,
+          totalPrice: trip.price * guests,
           specialRequirements: specialRequirements.trim() || undefined
         }),
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
+      const { data } = response;
+      if (response.status >= 400) {
         throw new Error(data.error || data.message || 'Failed to create booking');
       }
 
@@ -64,7 +68,10 @@ export default function BookingModal({ trip, isOpen, onClose, onSuccess }: Booki
           color="default"
           variant="light"
           size="sm"
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full p-2 transition-all duration-200"
+          className={clsx(
+            "absolute top-4 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full p-2 transition-all duration-200",
+            isRTL ? "left-4" : "right-4"
+          )}
           disabled={loading}
         >
           <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -72,12 +79,12 @@ export default function BookingModal({ trip, isOpen, onClose, onSuccess }: Booki
           </svg>
         </Button>
 
-        <h2 className="text-2xl font-display font-bold mb-6">Book Your Trip</h2>
+        <h2 className="text-2xl font-display font-bold mb-6">{t('bookingModal.title')}</h2>
         
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Number of Guests
+              {t('bookingModal.numberOfGuests')}
             </label>
             <div className="flex items-center gap-4">
               <button
@@ -106,7 +113,8 @@ export default function BookingModal({ trip, isOpen, onClose, onSuccess }: Booki
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Special Requirements (Optional)
+              {t('bookingModal.specialRequirements.label')} 
+              <span className="text-gray-500 ml-1">{t('bookingModal.specialRequirements.optional')}</span>
             </label>
             <textarea
               value={specialRequirements}
@@ -114,7 +122,7 @@ export default function BookingModal({ trip, isOpen, onClose, onSuccess }: Booki
               disabled={loading}
               className="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 placeholder-gray-500 focus:border-secondary-500 focus:ring-2 focus:ring-secondary-200 focus:outline-none disabled:opacity-50"
               rows={3}
-              placeholder="Any dietary restrictions, accessibility needs, or other requirements..."
+              placeholder={t('bookingModal.specialRequirements.placeholder')}
             />
           </div>
 
@@ -124,11 +132,11 @@ export default function BookingModal({ trip, isOpen, onClose, onSuccess }: Booki
 
           <div className="flex flex-col gap-4">
             <div className="flex justify-between items-center text-sm">
-              <span className="text-gray-600">Price per person</span>
+              <span className="text-gray-600">{t('bookingModal.pricing.pricePerPerson')}</span>
               <span className="font-semibold">${trip.price.toLocaleString()}</span>
             </div>
             <div className="flex justify-between items-center text-lg font-bold">
-              <span>Total price</span>
+              <span>{t('bookingModal.pricing.totalPrice')}</span>
               <span className="text-secondary-500">${(trip.price * guests).toLocaleString()}</span>
             </div>
           </div>
@@ -141,9 +149,9 @@ export default function BookingModal({ trip, isOpen, onClose, onSuccess }: Booki
             fullWidth
             isLoading={loading}
             disabled={loading}
-            className="bg-gradient-to-r from-secondary-500 to-secondary-400 px-6 py-2.5 text-white shadow-lg shadow-secondary-500/25 hover:shadow-secondary-500/50 hover:-translate-y-0.5 active:translate-y-0 transform transition-all duration-200 rounded-xl font-medium"
+            className="bg-gradient-to-r from-primary-500 to-primary-600 px-6 py-2.5 text-white shadow-lg shadow-primary-500/25 hover:shadow-primary-500/50 hover:-translate-y-0.5 active:translate-y-0 transform transition-all duration-200 rounded-xl font-medium"
           >
-            Confirm Booking
+            {t('bookingModal.confirmBooking')}
           </Button>
         </form>
       </div>

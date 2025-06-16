@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { useTranslation } from 'next-i18next';
 import type { Trip } from '../../types/trip';
 
 interface Props {
@@ -11,6 +12,7 @@ interface Props {
 type TripField = keyof Trip;
 
 export default function TripForm({ trip, destinations = [], onSubmit, onCancel }: Props) {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState<Partial<Trip>>({
     title: trip?.title || '',
     description: trip?.description || '',
@@ -39,7 +41,7 @@ export default function TripForm({ trip, destinations = [], onSubmit, onCancel }
     const missingFields = requiredFields.filter(field => !formData[field]);
     
     if (missingFields.length > 0) {
-      alert(`Please fill in all required fields: ${missingFields.join(', ')}`);
+      alert(t('admin.forms.trip.validation.required', { fields: missingFields.join(', ') }));
       return;
     }
 
@@ -68,16 +70,17 @@ export default function TripForm({ trip, destinations = [], onSubmit, onCancel }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
+      <div>
         <label htmlFor="title" className="block text-sm font-medium text-gray-700">
-          Title *
+          {t('admin.forms.trip.title')} *
         </label>
-          <input
-            type="text"
-            name="title"
+        <input
+          type="text"
+          name="title"
           id="title"
-            value={formData.title}
-            onChange={handleChange}
+          value={formData.title}
+          onChange={handleChange}
+          placeholder={t('admin.forms.trip.placeholders.title')}
           className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
           required
         />
@@ -85,13 +88,14 @@ export default function TripForm({ trip, destinations = [], onSubmit, onCancel }
 
       <div>
         <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-          Description *
+          {t('admin.forms.trip.description')} *
         </label>
         <textarea
           name="description"
           id="description"
           value={formData.description}
           onChange={handleChange}
+          placeholder={t('admin.forms.trip.placeholders.description')}
           rows={3}
           className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
             required
