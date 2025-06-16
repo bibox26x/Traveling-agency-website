@@ -18,8 +18,10 @@ function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [activeSection, setActiveSection] = useState<'settings' | 'bookings'>('settings');
   const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -36,24 +38,26 @@ function ProfilePage() {
     fetchBookings();
   }, []);
 
-  // Update phone state when user data changes
   useEffect(() => {
-    if (user?.phone) {
-      setPhone(user.phone);
+    if (user) {
+      setPhone(user.phone || '');
+      setEmail(user.email || '');
     }
   }, [user]);
 
   const handleSave = async () => {
     try {
       setIsSaving(true);
-      const response = await api.patch('/api/users/profile', { phone });
+      setErrorMessage('');
+      const response = await api.patch('/api/users/profile', { phone, email });
       updateUser(response.data);
       setSuccessMessage(t('pages.profile.updateSuccess'));
       setTimeout(() => setSuccessMessage(''), 3000);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to update profile:', error);
-      setSuccessMessage(t('pages.profile.updateError'));
-      setTimeout(() => setSuccessMessage(''), 3000);
+      const errorMsg = error.response?.data?.error || t('pages.profile.updateError');
+      setErrorMessage(errorMsg);
+      setTimeout(() => setErrorMessage(''), 3000);
     } finally {
       setIsSaving(false);
     }
@@ -145,9 +149,9 @@ function ProfilePage() {
                             </label>
                             <input
                               type="email"
-                              value={user?.email || ''}
-                              readOnly
-                              className="block w-full rounded-lg border-gray-300 bg-gray-50 px-4 py-2.5"
+                              value={email}
+                              onChange={(e) => setEmail(e.target.value)}
+                              className="block w-full rounded-lg border-gray-300 px-4 py-2.5 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
                             />
                           </div>
                           <div className="md:col-span-2">
@@ -164,9 +168,9 @@ function ProfilePage() {
                           </div>
                         </div>
 
-                        {successMessage && (
-                          <div className={`p-4 rounded-lg ${successMessage.includes('error') ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
-                            {successMessage}
+                        {(successMessage || errorMessage) && (
+                          <div className={`mt-4 p-4 rounded-lg ${errorMessage ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
+                            {errorMessage || successMessage}
                           </div>
                         )}
 

@@ -357,6 +357,9 @@
       "upcoming": "Upcoming Bookings",
       "past": "Past Bookings",
       "cancelled": "Cancelled Bookings"
+    },
+    "errors": {
+      "emailInUse": "This email is already in use. Please use a different email."
     }
   },
   "bookings": {
@@ -856,7 +859,10 @@
         "cancelled": "Cancelled Bookings"
       },
       "updateSuccess": "Profile updated successfully",
-      "updateError": "Failed to update profile. Please try again."
+      "updateError": "Failed to update profile. Please try again.",
+      "errors": {
+        "emailInUse": "This email is already in use. Please use a different email."
+      }
     },
     "admin": {
       "dashboard": {

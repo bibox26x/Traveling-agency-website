@@ -322,6 +322,9 @@
       "upcoming": "Réservations à venir",
       "past": "Réservations passées",
       "cancelled": "Réservations annulées"
+    },
+    "errors": {
+      "emailInUse": "Cette adresse email est déjà utilisée. Veuillez en utiliser une autre."
     }
   },
   "bookings": {
@@ -822,7 +825,10 @@
         "cancelled": "Réservations Annulées"
       },
       "updateSuccess": "Profil mis à jour avec succès",
-      "updateError": "Échec de la mise à jour du profil. Veuillez réessayer."
+      "updateError": "Échec de la mise à jour du profil. Veuillez réessayer.",
+      "errors": {
+        "emailInUse": "Cette adresse email est déjà utilisée. Veuillez en utiliser une autre."
+      }
     },
     "admin": {
       "dashboard": {
