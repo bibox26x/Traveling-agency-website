@@ -18,6 +18,7 @@ export default function LanguageSwitcher() {
   const { pathname, asPath, query } = router;
   const [mounted, setMounted] = useState(false);
   const [isChanging, setIsChanging] = useState(false);
+  const isRTL = router.locale === 'ar';
 
   useEffect(() => {
     setMounted(true);
@@ -97,9 +98,14 @@ export default function LanguageSwitcher() {
   const currentLanguage = languages.find(lang => lang.code === router.locale) || languages[0];
 
   return (
-    <Menu as="div" className="relative inline-block text-left">
-      <Menu.Button className="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
-        <GlobeAltIcon className="w-5 h-5 mr-2" aria-hidden="true" />
+    <Menu as="div" className="relative inline-block text-left w-full md:w-auto">
+      <Menu.Button className={clsx(
+        "inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium rounded-md",
+        "bg-white text-gray-700 hover:bg-gray-50",
+        "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500",
+        isRTL ? "flex-row-reverse" : "flex-row"
+      )}>
+        <GlobeAltIcon className={clsx("w-5 h-5", isRTL ? "ml-2" : "mr-2")} aria-hidden="true" />
         <span>{currentLanguage.localName}</span>
       </Menu.Button>
 
@@ -112,7 +118,12 @@ export default function LanguageSwitcher() {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute right-0 w-56 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className={clsx(
+          "absolute mt-2 w-56 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none",
+          "z-50", // Ensure dropdown is above other elements
+          isRTL ? "right-0 origin-top-right" : "left-0 origin-top-left",
+          "md:w-48" // Slightly narrower on desktop
+        )}>
           <div className="py-1">
             {languages.map((language) => (
               <Menu.Item key={language.code}>
@@ -121,15 +132,19 @@ export default function LanguageSwitcher() {
                     onClick={() => changeLanguage(language.code)}
                     disabled={isChanging}
                     className={clsx(
-                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                      'w-full text-left px-4 py-2 text-sm flex items-center space-x-2',
-                      isChanging && 'opacity-50 cursor-not-allowed'
+                      "w-full text-left px-4 py-2 text-sm flex items-center",
+                      active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                      isChanging && "opacity-50 cursor-not-allowed",
+                      isRTL ? "flex-row-reverse space-x-reverse" : "flex-row space-x-2"
                     )}
                   >
                     <span className="text-xl">{language.flag}</span>
                     <span>{language.localName}</span>
                     {router.locale === language.code && (
-                      <span className="ml-auto text-primary-600">✓</span>
+                      <span className={clsx(
+                        "text-primary-600",
+                        isRTL ? "mr-auto" : "ml-auto"
+                      )}>✓</span>
                     )}
                   </button>
                 )}
