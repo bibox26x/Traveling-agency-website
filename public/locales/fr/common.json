@@ -284,8 +284,18 @@
   },
   "profile": {
     "title": "Mon Profil",
-    "personalInfo": "Informations Personnelles",
+    "personalInfo": {
+      "title": "Informations Personnelles",
+      "name": "Nom Complet",
+      "email": "Adresse Email",
+      "phone": "Numéro de Téléphone",
+      "phonePlaceholder": "Entrez votre numéro de téléphone",
+      "address": "Adresse",
+      "preferences": "Préférences de Voyage"
+    },
     "updateProfile": "Mettre à jour le profil",
+    "updateSuccess": "Profil mis à jour avec succès",
+    "updateError": "Échec de la mise à jour du profil. Veuillez réessayer.",
     "changePassword": "Changer le mot de passe",
     "currentPassword": "Mot de passe actuel",
     "newPassword": "Nouveau mot de passe",
@@ -352,6 +362,8 @@
       "customerInfo": "Informations client",
       "name": "Nom",
       "email": "Email",
+      "phone": "Téléphone",
+      "phoneNotProvided": "Aucun numéro de téléphone fourni",
       "location": "Lieu",
       "specialRequirements": "Exigences spéciales",
       "tripNotFound": "Voyage non trouvé",
@@ -652,11 +664,12 @@
     "form": {
       "email": "Email",
       "password": "Mot de passe",
-      "required": "Obligatoire",
+      "required": "Requis",
       "optional": "Optionnel",
       "submit": "Soumettre",
       "cancel": "Annuler",
-      "save": "Enregistrer les modifications",
+      "save": "Enregistrer",
+      "saving": "Enregistrement...",
       "delete": "Supprimer",
       "edit": "Modifier",
       "search": "Rechercher",
@@ -787,6 +800,7 @@
         "name": "Nom Complet",
         "email": "Adresse Email",
         "phone": "Numéro de Téléphone",
+        "phonePlaceholder": "Entrez votre numéro de téléphone",
         "address": "Adresse",
         "preferences": "Préférences de Voyage"
       },
@@ -806,7 +820,9 @@
         "upcoming": "Voyages à Venir",
         "past": "Voyages Passés",
         "cancelled": "Réservations Annulées"
-      }
+      },
+      "updateSuccess": "Profil mis à jour avec succès",
+      "updateError": "Échec de la mise à jour du profil. Veuillez réessayer."
     },
     "admin": {
       "dashboard": {

@@ -6,6 +6,7 @@ interface User {
   id: number;
   name: string;
   email: string;
+  phone?: string;
   role: string;
 }
 
@@ -17,6 +18,7 @@ interface AuthContextType {
   register: (name: string, email: string, password: string, rememberMe?: boolean) => Promise<void>;
   logout: () => Promise<void>;
   clearError: () => void;
+  updateUser: (user: User) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -265,7 +267,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     login,
     register,
     logout: handleLogout,
-    clearError
+    clearError,
+    updateUser: setUser
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

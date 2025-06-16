@@ -319,8 +319,18 @@
   },
   "profile": {
     "title": "My Profile",
-    "personalInfo": "Personal Information",
+    "personalInfo": {
+      "title": "Personal Information",
+      "name": "Full Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "phonePlaceholder": "Enter your phone number",
+      "address": "Address",
+      "preferences": "Travel Preferences"
+    },
     "updateProfile": "Update Profile",
+    "updateSuccess": "Profile updated successfully",
+    "updateError": "Failed to update profile. Please try again.",
     "changePassword": "Change Password",
     "currentPassword": "Current Password",
     "newPassword": "New Password",
@@ -386,6 +396,8 @@
       "customerInfo": "Customer Information",
       "name": "Name",
       "email": "Email",
+      "phone": "Phone",
+      "phoneNotProvided": "No phone number provided",
       "location": "Location",
       "specialRequirements": "Special Requirements",
       "tripNotFound": "Trip not found",
@@ -691,6 +703,7 @@
       "submit": "Submit",
       "cancel": "Cancel",
       "save": "Save Changes",
+      "saving": "Saving...",
       "delete": "Delete",
       "edit": "Edit",
       "search": "Search",
@@ -821,6 +834,7 @@
         "name": "Full Name",
         "email": "Email Address",
         "phone": "Phone Number",
+        "phonePlaceholder": "Enter your phone number",
         "address": "Address",
         "preferences": "Travel Preferences"
       },
@@ -840,7 +854,9 @@
         "upcoming": "Upcoming Trips",
         "past": "Past Trips",
         "cancelled": "Cancelled Bookings"
-      }
+      },
+      "updateSuccess": "Profile updated successfully",
+      "updateError": "Failed to update profile. Please try again."
     },
     "admin": {
       "dashboard": {

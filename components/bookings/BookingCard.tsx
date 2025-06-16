@@ -135,6 +135,18 @@ export default function BookingCard({
                 <p className="text-sm text-gray-500">{t('bookings.details.email')}</p>
                 <p className="text-sm font-medium text-gray-900">{bookingUser.email}</p>
               </div>
+              <div className="sm:col-span-2">
+                <p className="text-sm text-gray-500">{t('bookings.details.phone')}</p>
+                <p className="text-sm font-medium text-gray-900">
+                  {bookingUser.phone ? (
+                    <a href={`tel:${bookingUser.phone}`} className="text-primary-600 hover:text-primary-700">
+                      {bookingUser.phone}
+                    </a>
+                  ) : (
+                    <span className="text-gray-400">{t('bookings.details.phoneNotProvided')}</span>
+                  )}
+                </p>
+              </div>
             </div>
           </div>
         )}

@@ -13,10 +13,13 @@ import Head from 'next/head';
 
 function ProfilePage() {
   const { t } = useTranslation('common');
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeSection, setActiveSection] = useState<'settings' | 'bookings'>('settings');
+  const [phone, setPhone] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -32,6 +35,29 @@ function ProfilePage() {
 
     fetchBookings();
   }, []);
+
+  // Update phone state when user data changes
+  useEffect(() => {
+    if (user?.phone) {
+      setPhone(user.phone);
+    }
+  }, [user]);
+
+  const handleSave = async () => {
+    try {
+      setIsSaving(true);
+      const response = await api.patch('/api/users/profile', { phone });
+      updateUser(response.data);
+      setSuccessMessage(t('pages.profile.updateSuccess'));
+      setTimeout(() => setSuccessMessage(''), 3000);
+    } catch (error) {
+      console.error('Failed to update profile:', error);
+      setSuccessMessage(t('pages.profile.updateError'));
+      setTimeout(() => setSuccessMessage(''), 3000);
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   return (
     <Layout>
@@ -124,6 +150,35 @@ function ProfilePage() {
                               className="block w-full rounded-lg border-gray-300 bg-gray-50 px-4 py-2.5"
                             />
                           </div>
+                          <div className="md:col-span-2">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              {t('pages.profile.personalInfo.phone')}
+                            </label>
+                            <input
+                              type="tel"
+                              value={phone}
+                              onChange={(e) => setPhone(e.target.value)}
+                              placeholder={t('pages.profile.personalInfo.phonePlaceholder')}
+                              className="block w-full rounded-lg border-gray-300 px-4 py-2.5 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
+                            />
+                          </div>
+                        </div>
+
+                        {successMessage && (
+                          <div className={`p-4 rounded-lg ${successMessage.includes('error') ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
+                            {successMessage}
+                          </div>
+                        )}
+
+                        {/* Save Button */}
+                        <div className="pt-6 border-t border-gray-200">
+                          <button 
+                            onClick={handleSave}
+                            disabled={isSaving}
+                            className="w-full sm:w-auto px-8 py-3 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 text-white font-medium shadow-lg shadow-primary-500/25 hover:shadow-primary-500/35 hover:-translate-y-0.5 transform transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            {isSaving ? t('ui.form.saving') : t('ui.form.save')}
+                          </button>
                         </div>
                       </div>
 
@@ -186,13 +241,6 @@ function ProfilePage() {
                             <span className="text-gray-700">{t('pages.profile.settings.publicBookings')}</span>
                           </label>
                         </div>
-                      </div>
-
-                      {/* Save Button */}
-                      <div className="pt-6 border-t border-gray-200">
-                        <button className="w-full sm:w-auto px-8 py-3 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 text-white font-medium shadow-lg shadow-primary-500/25 hover:shadow-primary-500/35 hover:-translate-y-0.5 transform transition-all duration-200">
-                          {t('ui.form.save')}
-                        </button>
                       </div>
                     </div>
                   </div>

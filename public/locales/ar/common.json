@@ -289,13 +289,16 @@
     "title": "ملفي الشخصي",
     "personalInfo": {
       "title": "المعلومات الشخصية",
-      "name": "الاسم",
+      "name": "الاسم الكامل",
       "email": "البريد الإلكتروني",
       "phone": "رقم الهاتف",
+      "phonePlaceholder": "أدخل رقم هاتفك",
       "address": "العنوان",
       "preferences": "تفضيلات السفر"
     },
     "updateProfile": "تحديث الملف الشخصي",
+    "updateSuccess": "تم تحديث الملف الشخصي بنجاح",
+    "updateError": "فشل تحديث الملف الشخصي. يرجى المحاولة مرة أخرى.",
     "changePassword": "تغيير كلمة المرور",
     "currentPassword": "كلمة المرور الحالية",
     "newPassword": "كلمة المرور الجديدة",
@@ -366,6 +369,8 @@
       "customerInfo": "معلومات العميل",
       "name": "الاسم",
       "email": "البريد الإلكتروني",
+      "phone": "الهاتف",
+      "phoneNotProvided": "لم يتم تقديم رقم الهاتف",
       "location": "الموقع",
       "duration": "المدة",
       "specialRequirements": "متطلبات خاصة",
@@ -682,6 +687,7 @@
       "submit": "إرسال",
       "cancel": "إلغاء",
       "save": "حفظ التغييرات",
+      "saving": "جاري الحفظ...",
       "delete": "حذف",
       "edit": "تعديل",
       "search": "بحث",
@@ -691,18 +697,7 @@
       "close": "إغلاق",
       "back": "رجوع",
       "next": "التالي",
-      "previous": "السابق",
-      "loading": "جاري التحميل...",
-      "noResults": "لا توجد نتائج",
-      "selectOption": "اختر خياراً",
-      "placeholders": {
-        "search": "بحث...",
-        "email": "أدخل بريدك الإلكتروني",
-        "password": "أدخل كلمة المرور",
-        "name": "أدخل اسمك",
-        "phone": "أدخل رقم هاتفك",
-        "message": "أدخل رسالتك"
-      }
+      "previous": "السابق"
     },
     "validation": {
       "required": "هذا الحقل مطلوب",
@@ -809,9 +804,10 @@
       "title": "ملفي الشخصي",
       "personalInfo": {
         "title": "المعلومات الشخصية",
-        "name": "الاسم",
+        "name": "الاسم الكامل",
         "email": "البريد الإلكتروني",
         "phone": "رقم الهاتف",
+        "phonePlaceholder": "أدخل رقم هاتفك",
         "address": "العنوان",
         "preferences": "تفضيلات السفر"
       },
@@ -831,7 +827,9 @@
         "upcoming": "الرحلات القادمة",
         "past": "الرحلات السابقة",
         "cancelled": "الحجوزات الملغاة"
-      }
+      },
+      "updateSuccess": "تم تحديث الملف الشخصي بنجاح",
+      "updateError": "فشل تحديث الملف الشخصي. يرجى المحاولة مرة أخرى."
     },
     "admin": {
       "dashboard": {
