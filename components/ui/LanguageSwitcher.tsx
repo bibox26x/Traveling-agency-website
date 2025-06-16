@@ -44,8 +44,11 @@ export default function LanguageSwitcher() {
     if (lang && !isChanging && router.locale !== locale) {
       setIsChanging(true);
       try {
-        // Update cookie first
+        // Update cookie first with more specific options
         setLanguageCookie(lang.code);
+        
+        // Force cookie update in case the previous call failed
+        document.cookie = `NEXT_LOCALE=${lang.code}; path=/; max-age=${365 * 24 * 60 * 60}; SameSite=Strict${process.env.NODE_ENV === 'production' ? '; Secure' : ''}`;
         
         // Update document attributes
         document.documentElement.dir = lang.dir;
@@ -95,34 +98,10 @@ export default function LanguageSwitcher() {
 
   return (
     <Menu as="div" className="relative inline-block text-left">
-      <div>
-        <Menu.Button 
-          disabled={isChanging}
-          className={clsx(
-            "inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium",
-            "bg-white rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2",
-            "focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200",
-            isChanging ? "opacity-70 cursor-not-allowed" : "text-gray-700",
-            currentLanguage.dir === 'rtl' ? 'font-arabic' : 'font-sans'
-          )}
-        >
-          {isChanging ? (
-            <>
-              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              {t('common.loading')}
-            </>
-          ) : (
-            <>
-              <GlobeAltIcon className="w-5 h-5 mr-2" aria-hidden="true" />
-              <span className="mr-1">{currentLanguage.flag}</span>
-              <span>{currentLanguage.localName}</span>
-            </>
-          )}
-        </Menu.Button>
-      </div>
+      <Menu.Button className="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+        <GlobeAltIcon className="w-5 h-5 mr-2" aria-hidden="true" />
+        <span>{currentLanguage.localName}</span>
+      </Menu.Button>
 
       <Transition
         as={Fragment}
@@ -140,23 +119,17 @@ export default function LanguageSwitcher() {
                 {({ active }) => (
                   <button
                     onClick={() => changeLanguage(language.code)}
+                    disabled={isChanging}
                     className={clsx(
-                      'group flex items-center w-full px-4 py-2 text-sm',
                       active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                      language.dir === 'rtl' ? 'font-arabic text-right' : 'font-sans text-left',
-                      isChanging && 'opacity-50 cursor-not-allowed',
-                      language.code === router.locale && 'bg-gray-50'
+                      'w-full text-left px-4 py-2 text-sm flex items-center space-x-2',
+                      isChanging && 'opacity-50 cursor-not-allowed'
                     )}
-                    disabled={isChanging || language.code === router.locale}
-                    dir={language.dir}
-                    lang={language.code}
                   >
-                    <span className="mr-2">{language.flag}</span>
+                    <span className="text-xl">{language.flag}</span>
                     <span>{language.localName}</span>
-                    <span className="mx-2 text-gray-400">-</span>
-                    <span className="text-gray-500">{language.name}</span>
-                    {language.code === router.locale && (
-                      <span className="ml-auto text-indigo-600">✓</span>
+                    {router.locale === language.code && (
+                      <span className="ml-auto text-primary-600">✓</span>
                     )}
                   </button>
                 )}

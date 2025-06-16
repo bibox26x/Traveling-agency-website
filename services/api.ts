@@ -34,7 +34,20 @@ api.interceptors.request.use((config) => {
 
 // Add response interceptor for error handling
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // Check for auth-related cookies in response headers
+    const setCookieHeader = response.headers['set-cookie'];
+    if (setCookieHeader && typeof window !== 'undefined') {
+      // Parse and set cookies manually as fallback
+      setCookieHeader.forEach(cookie => {
+        const [cookiePair] = cookie.split(';');
+        if (cookiePair) {
+          document.cookie = cookiePair + '; path=/';
+        }
+      });
+    }
+    return response;
+  },
   async (error) => {
     const originalRequest = error.config;
 
@@ -74,6 +87,18 @@ export const auth = {
       const response = await api.post('/auth/login', { email, password, rememberMe }, {
         withCredentials: true
       });
+
+      // Fallback: Set cookies directly if on client side
+      if (typeof window !== 'undefined') {
+        const maxAge = rememberMe ? 30 * 24 * 60 * 60 : 15 * 60; // 30 days or 15 minutes
+        const cookieOptions = `path=/; max-age=${maxAge}; ${process.env.NODE_ENV === 'production' ? 'secure; ' : ''}samesite=strict`;
+        
+        if (response.data.tokens) {
+          document.cookie = `accessToken=${response.data.tokens.accessToken}; ${cookieOptions}`;
+          document.cookie = `refreshToken=${response.data.tokens.refreshToken}; ${cookieOptions}`;
+        }
+      }
+
       return response.data;
     } catch (error: any) {
       if (error.response?.status === 401) {
@@ -93,6 +118,18 @@ export const auth = {
       const response = await api.post('/auth/register', { name, email, password, rememberMe }, {
         withCredentials: true
       });
+
+      // Fallback: Set cookies directly if on client side
+      if (typeof window !== 'undefined') {
+        const maxAge = rememberMe ? 30 * 24 * 60 * 60 : 15 * 60; // 30 days or 15 minutes
+        const cookieOptions = `path=/; max-age=${maxAge}; ${process.env.NODE_ENV === 'production' ? 'secure; ' : ''}samesite=strict`;
+        
+        if (response.data.tokens) {
+          document.cookie = `accessToken=${response.data.tokens.accessToken}; ${cookieOptions}`;
+          document.cookie = `refreshToken=${response.data.tokens.refreshToken}; ${cookieOptions}`;
+        }
+      }
+
       return response.data;
     } catch (error: any) {
       if (error.response?.status === 409) {
@@ -118,6 +155,14 @@ export const auth = {
         const response = await api.post('/auth/refresh', {}, {
           withCredentials: true
         });
+
+        // Fallback: Set cookies directly if on client side
+        if (typeof window !== 'undefined' && response.data.tokens) {
+          const cookieOptions = `path=/; max-age=${15 * 60}; ${process.env.NODE_ENV === 'production' ? 'secure; ' : ''}samesite=strict`; // 15 minutes
+          document.cookie = `accessToken=${response.data.tokens.accessToken}; ${cookieOptions}`;
+          document.cookie = `refreshToken=${response.data.tokens.refreshToken}; ${cookieOptions}`;
+        }
+
         return response.data;
       } catch (error) {
         throw error;
@@ -143,12 +188,16 @@ export const auth = {
       // Clear all auth-related cookies manually as backup
       document.cookie = 'accessToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
       document.cookie = 'refreshToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+      document.cookie = 'accessToken=; Path=/api; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+      document.cookie = 'refreshToken=; Path=/api; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
       
     } catch (error) {
       console.error('Logout error:', error);
       // Still clear cookies even if the API call fails
       document.cookie = 'accessToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
       document.cookie = 'refreshToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+      document.cookie = 'accessToken=; Path=/api; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+      document.cookie = 'refreshToken=; Path=/api; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
       throw error;
     }
   },
