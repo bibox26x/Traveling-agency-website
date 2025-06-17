@@ -5,7 +5,7 @@ import { Trip } from '../../types/trip';
 import { Button } from '@heroui/react';
 import { useTranslation } from 'next-i18next';
 import clsx from 'clsx';
-
+import toast from 'react-hot-toast';
 interface BookingModalProps {
   trip: Trip;
   isOpen: boolean;
@@ -26,6 +26,7 @@ export default function BookingModal({ trip, isOpen, onClose, onSuccess }: Booki
     e.preventDefault();
     if (!user) {
       setError('Please log in to book this trip');
+      toast.error(t('bookings.errors.loginRequired'));
       return;
     }
 
@@ -48,11 +49,20 @@ export default function BookingModal({ trip, isOpen, onClose, onSuccess }: Booki
         throw new Error(data.error || data.message || 'Failed to create booking');
       }
 
-      onSuccess();
+      // Show success notification
+      toast.success(t('bookings.notifications.success'), {
+        duration: 4000 // Show for 4 seconds to give user time to read
+      });
+
+      // Close the modal and call success callback
       onClose();
+      onSuccess();
+
     } catch (err) {
       console.error('Booking error:', err);
-      setError(err instanceof Error ? err.message : 'Failed to create booking. Please try again.');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to create booking. Please try again.';
+      setError(errorMessage);
+      toast.error(t('bookings.errors.bookingFailed'));
     } finally {
       setLoading(false);
     }

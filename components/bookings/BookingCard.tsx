@@ -5,6 +5,8 @@ import { calculateEndDate } from '../../utils/dateUtils';
 import { Button } from '@heroui/react';
 import { useTranslation } from 'next-i18next';
 import CountdownTimer from './CountdownTimer';
+import { fetchWithAuth } from '../../utils/fetchWithAuth';
+import toast from 'react-hot-toast';
 
 interface Props {
   booking: Booking;
@@ -21,6 +23,7 @@ export default function BookingCard({
 }: Props) {
   const { user: currentUser } = useAuth();
   const { t, i18n } = useTranslation('common');
+  const [isDeleting, setIsDeleting] = useState(false);
   const {
     id,
     trip,
@@ -36,7 +39,35 @@ export default function BookingCard({
 
   const handleDelete = async () => {
     if (window.confirm(t('bookings.cancellationWarning'))) {
-      await onDelete?.(id);
+      setIsDeleting(true);
+      try {
+        // If admin is deleting, use the provided onDelete callback
+        if (currentUser?.role === 'admin' && onDelete) {
+          await onDelete(id);
+        } else {
+          // For regular users, call the API directly
+          const response = await fetchWithAuth(`/bookings/${id}`, {
+            method: 'DELETE',
+          });
+
+          if (response.status >= 400) {
+            throw new Error(response.data?.error || response.data?.message || 'Failed to cancel booking');
+          }
+
+          // Show success notification
+          toast.success(t('dynamic.booking.success.cancelled'));
+
+          // Update the status locally
+          if (onStatusChange) {
+            await onStatusChange(id, 'cancelled');
+          }
+        }
+      } catch (err) {
+        console.error('Cancel booking error:', err);
+        toast.error(t('dynamic.booking.error.cancellationFailed'));
+      } finally {
+        setIsDeleting(false);
+      }
     }
   };
 
@@ -87,6 +118,12 @@ export default function BookingCard({
   }
 
   const endDate = calculateEndDate(new Date(trip.startDate), trip.duration);
+
+  // Show cancel button if:
+  // 1. User is admin, OR
+  // 2. User owns the booking AND booking is not already cancelled
+  const showCancelButton = currentUser?.role === 'admin' || 
+    (currentUser?.id === bookingUser?.id && status !== 'cancelled');
 
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden">
@@ -189,7 +226,7 @@ export default function BookingCard({
           </div>
         )}
 
-        {currentUser?.role === 'admin' && (
+        {currentUser?.role === 'admin' ? (
           <div className="border-t border-gray-200 pt-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
               <div>
@@ -229,9 +266,27 @@ export default function BookingCard({
                 color="danger"
                 variant="bordered"
                 size="md"
+                isLoading={isDeleting}
+                disabled={isDeleting}
                 className="border-2 hover:bg-red-50 hover:border-red-600 hover:text-red-700 shadow-sm hover:shadow-red-500/10 transition-all duration-200"
               >
                 {t('common.delete')}
+              </Button>
+            </div>
+          </div>
+        ) : showCancelButton && (
+          <div className="border-t border-gray-200 pt-6">
+            <div className="flex justify-end">
+              <Button
+                onClick={handleDelete}
+                color="danger"
+                variant="bordered"
+                size="md"
+                isLoading={isDeleting}
+                disabled={isDeleting}
+                className="border-2 hover:bg-red-50 hover:border-red-600 hover:text-red-700 shadow-sm hover:shadow-red-500/10 transition-all duration-200"
+              >
+                {t('bookings.cancelBooking')}
               </Button>
             </div>
           </div>

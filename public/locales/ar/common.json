@@ -296,6 +296,15 @@
       "address": "العنوان",
       "preferences": "تفضيلات السفر"
     },
+    "settings": {
+      "title": "إعدادات الحساب",
+      "notifications": "إعدادات الإشعارات",
+      "language": "إعدادات اللغة",
+      "currency": "إعدادات العملة",
+      "privacy": "إعدادات الخصوصية",
+      "showProfile": "إظهار ملفي الشخصي للمستخدمين الآخرين",
+      "publicBookings": "جعل حجوزاتي عامة"
+    },
     "updateProfile": "تحديث الملف الشخصي",
     "updateSuccess": "تم تحديث الملف الشخصي بنجاح",
     "updateError": "فشل تحديث الملف الشخصي. يرجى المحاولة مرة أخرى.",
@@ -317,16 +326,6 @@
       "past": "الحجوزات السابقة",
       "cancelled": "الحجوزات الملغاة"
     },
-    "settings": {
-      "title": "إعدادات الحساب",
-      "description": "إدارة تفضيلات وإعدادات حسابك",
-      "notifications": "تفضيلات الإشعارات",
-      "language": "تفضيل اللغة",
-      "currency": "تفضيل العملة",
-      "privacy": "إعدادات الخصوصية",
-      "showProfile": "إظهار ملفي الشخصي للمستخدمين الآخرين",
-      "publicBookings": "جعل حجوزاتي عامة"
-    },
     "meta": {
       "description": "إدارة إعدادات حسابك وتفضيلاتك وعرض سجل سفرك"
     },
@@ -340,22 +339,22 @@
     "subtitle": "عرض وإدارة حجوزات سفرك",
     "upcoming": "الرحلات القادمة",
     "past": "الرحلات السابقة",
-    "cancelled": "ملغاة",
+    "cancelled": "الملغاة",
     "noBookings": "ليس لديك أي حجوزات حتى الآن",
+    "noPendingBookings": "ليس لديك أي حجوزات معلقة في الوقت الحالي",
     "bookingDetails": "تفاصيل الحجز",
     "bookingDate": "تاريخ الحجز",
     "travelDate": "تواريخ السفر",
     "passengers": "المسافرون",
     "totalPrice": "السعر الإجمالي",
     "paymentStatusTitle": "حالة الدفع",
-    "statusTitle": "حالة الحجز",
     "bookingStatus": "حالة الحجز",
     "cancelBooking": "إلغاء الحجز",
     "modifyBooking": "تعديل الحجز",
     "downloadTicket": "تحميل التذكرة",
     "confirmCancellation": "تأكيد الإلغاء",
     "cancellationWarning": "هل أنت متأكد من رغبتك في إلغاء هذا الحجز؟",
-    "notFound": "لم يتم العثور على الحجز",
+    "notFound": "الحجز غير موجود",
     "filters": {
       "all": "جميع الحجوزات",
       "upcoming": "القادمة",
@@ -367,15 +366,15 @@
       "tripName": "الرحلة",
       "dates": "تواريخ السفر",
       "status": "الحالة",
+      "duration": "المدة",
       "totalPrice": "السعر الإجمالي",
-      "participants": "المشاركون",
+      "participants": "الضيوف",
       "customerInfo": "معلومات العميل",
       "name": "الاسم",
       "email": "البريد الإلكتروني",
       "phone": "الهاتف",
       "phoneNotProvided": "لم يتم تقديم رقم الهاتف",
       "location": "الموقع",
-      "duration": "المدة",
       "specialRequirements": "متطلبات خاصة",
       "tripNotFound": "الرحلة غير موجودة",
       "durationNotAvailable": "المدة غير متوفرة"
@@ -388,24 +387,29 @@
       "contactSupport": "الاتصال بالدعم"
     },
     "status": {
-      "pending": "قيد الانتظار",
+      "pending": "معلق",
       "confirmed": "مؤكد",
       "cancelled": "ملغي"
     },
     "paymentStatus": {
       "pending": "في انتظار الدفع",
-      "paid": "تم الدفع",
-      "refunded": "تم الاسترداد"
+      "paid": "مدفوع",
+      "refunded": "مسترد"
     },
-    "loading": "جاري تحميل حجوزاتك...",
-    "error": "خطأ في تحميل الحجوزات",
-    "payment": {
-      "title": "إجراء الدفع",
-      "amount": "المبلغ المطلوب دفعه",
-      "method": "طريقة الدفع",
-      "submit": "تأكيد الدفع",
-      "success": "تم الدفع بنجاح",
-      "error": "فشل الدفع"
+    "notifications": {
+      "success": "تم حجز الرحلة بنجاح! يمكنك عرض تفاصيل حجزك في صفحة حجوزاتي.",
+      "bookingFailed": "فشل في حجز الرحلة. يرجى المحاولة مرة أخرى."
+    },
+    "errors": {
+      "loginRequired": "يرجى تسجيل الدخول لحجز هذه الرحلة",
+      "bookingFailed": "فشل في حجز الرحلة. يرجى المحاولة مرة أخرى."
+    },
+    "pendingTitle": "الحجوزات المعلقة",
+    "pendingDescription": "عرض وإدارة حجوزاتك المعلقة التي تتطلب الدفع أو التأكيد",
+    "viewAllBookings": "عرض جميع الحجوزات في الملف الشخصي",
+    "loading": "جاري تحميل الحجوزات...",
+    "meta": {
+      "description": "عرض وإدارة حجوزات سفرك المعلقة"
     }
   },
   "reviews": {
@@ -437,7 +441,14 @@
     "total": "المجموع",
     "confirmPayment": "تأكيد الدفع",
     "paymentSuccess": "تم الدفع بنجاح",
-    "paymentError": "فشل الدفع"
+    "paymentError": "فشل الدفع",
+    "notifications": {
+      "paymentSubmitted": "تم تقديم الدفع بنجاح!",
+      "paymentFailed": "فشل في معالجة الدفع. يرجى المحاولة مرة أخرى."
+    },
+    "errors": {
+      "paymentFailed": "فشل في معالجة الدفع. يرجى المحاولة مرة أخرى."
+    }
   },
   "admin": {
     "dashboard": "لوحة التحكم",
@@ -607,15 +618,15 @@
       "title": "لماذا تختارنا",
       "expert": {
         "title": "إرشاد خبير",
-        "description": "يضمن فريقنا من محترفي السفر ذوي الخبرة تخطيط كل رحلة بشكل مثالي"
+        "description": "يضمن فريقنا من محترفي السفر ذوي الخبرة أن كل رحلة مخططة بشكل مثالي."
       },
       "secure": {
         "title": "حجز آمن",
-        "description": "مدفوعاتك ومعلوماتك الشخصية محمية بتدابير أمنية متقدمة"
+        "description": "مدفوعاتك ومعلوماتك الشخصية محمية بتدابير أمنية متقدمة."
       },
       "support": {
         "title": "دعم على مدار الساعة",
-        "description": "فريق الدعم المخصص لدينا متاح دائماً لمساعدتك خلال رحلتك"
+        "description": "فريق الدعم المخصص لدينا متاح دائماً لمساعدتك خلال رحلتك."
       }
     },
     "contact": {
@@ -700,7 +711,18 @@
       "close": "إغلاق",
       "back": "رجوع",
       "next": "التالي",
-      "previous": "السابق"
+      "previous": "السابق",
+      "loading": "جاري التحميل...",
+      "noResults": "لا توجد نتائج",
+      "selectOption": "اختر خياراً",
+      "placeholders": {
+        "search": "بحث...",
+        "email": "أدخل بريدك الإلكتروني",
+        "password": "أدخل كلمة المرور",
+        "name": "أدخل اسمك",
+        "phone": "أدخل رقم هاتفك",
+        "message": "اكتب رسالتك هنا"
+      }
     },
     "validation": {
       "required": "هذا الحقل مطلوب",
@@ -816,13 +838,13 @@
       },
       "settings": {
         "title": "إعدادات الحساب",
-        "description": "إدارة تفضيلات وإعدادات حسابك",
-        "notifications": "تفضيلات الإشعارات",
-        "language": "تفضيل اللغة",
-        "currency": "تفضيل العملة",
+        "notifications": "إعدادات الإشعارات",
+        "language": "إعدادات اللغة",
+        "currency": "إعدادات العملة",
         "privacy": "إعدادات الخصوصية",
         "showProfile": "إظهار ملفي الشخصي للمستخدمين الآخرين",
-        "publicBookings": "جعل حجوزاتي عامة"
+        "publicBookings": "جعل حجوزاتي عامة",
+        "description": "إدارة إعدادات وتفضيلات حسابك"
       },
       "bookings": {
         "title": "حجوزاتي",
@@ -863,44 +885,12 @@
     },
     "bookings": {
       "title": "حجوزاتي",
-      "filters": {
-        "all": "جميع الحجوزات",
-        "upcoming": "القادمة",
-        "completed": "المكتملة",
-        "cancelled": "الملغاة"
-      },
-      "details": {
-        "bookingId": "رقم الحجز",
-        "tripName": "اسم الرحلة",
-        "dates": "تواريخ السفر",
-        "status": "الحالة",
-        "totalPrice": "السعر الإجمالي",
-        "participants": "المشاركون",
-        "paymentInfo": {
-          "title": "معلومات الدفع",
-          "totalPaid": "المبلغ المدفوع",
-          "remaining": "المبلغ المتبقي",
-          "fullyPaid": "تم الدفع بالكامل"
-        },
-        "tripNotFound": "الرحلة غير موجودة",
-        "durationNotAvailable": "المدة غير متوفرة"
-      },
-      "actions": {
-        "viewDetails": "عرض التفاصيل",
-        "modifyBooking": "تعديل الحجز",
-        "cancelBooking": "إلغاء الحجز",
-        "downloadInvoice": "تحميل الفاتورة",
-        "contactSupport": "الاتصال بالدعم"
-      },
+      "pendingTitle": "الحجوزات المعلقة",
+      "pendingDescription": "عرض وإدارة حجوزاتك المعلقة التي تتطلب الدفع أو التأكيد",
+      "viewAllBookings": "عرض جميع الحجوزات في الملف الشخصي",
       "loading": "جاري تحميل الحجوزات...",
-      "error": "حدث خطأ أثناء تحميل الحجوزات",
-      "payment": {
-        "title": "الدفع",
-        "amount": "المبلغ",
-        "method": "طريقة الدفع",
-        "submit": "إتمام الدفع",
-        "success": "تم الدفع بنجاح",
-        "error": "حدث خطأ أثناء الدفع"
+      "meta": {
+        "description": "عرض وإدارة حجوزات سفرك المعلقة"
       }
     }
   },
@@ -930,9 +920,10 @@
       },
       "error": {
         "unavailable": "التواريخ المحددة غير متوفرة",
-        "paymentFailed": "فشلت معالجة الدفع",
+        "paymentFailed": "فشل معالجة الدفع",
         "invalidDates": "تواريخ السفر غير صالحة",
-        "noAvailability": "لا يوجد توفر للخيارات المحددة"
+        "noAvailability": "لا يوجد توفر للخيارات المحددة",
+        "cancellationFailed": "فشل إلغاء الحجز. يرجى المحاولة مرة أخرى."
       }
     },
     "profile": {

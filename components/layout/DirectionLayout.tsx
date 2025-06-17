@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { getLanguageCookie, setLanguageCookie } from '../../utils/cookie-utils';
 import { useTranslation } from 'react-i18next';
 
@@ -17,8 +17,15 @@ const DirectionLayout: React.FC<DirectionLayoutProps> = ({ children }) => {
   const router = useRouter();
   const { i18n } = useTranslation();
   const isInitialMount = useRef(true);
+  const [mounted, setMounted] = useState(false);
   
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+
     if (isInitialMount.current) {
       isInitialMount.current = false;
       
@@ -66,10 +73,14 @@ const DirectionLayout: React.FC<DirectionLayoutProps> = ({ children }) => {
         document.body.classList.remove('rtl', 'ltr');
       }
     };
-  }, [router.locale, router.pathname, router.asPath, i18n]);
+  }, [router, router.locale, router.pathname, router.asPath, i18n, mounted]);
 
   const currentLang = languages.find(lang => lang.code === router.locale) || languages[0];
   const isRTL = currentLang.dir === 'rtl';
+
+  if (!mounted) {
+    return <div style={{ visibility: 'hidden' }}>{children}</div>;
+  }
 
   return (
     <div 

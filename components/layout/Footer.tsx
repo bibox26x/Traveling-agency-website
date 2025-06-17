@@ -1,9 +1,15 @@
 import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
+import { useEffect, useState } from 'react';
 
 const Footer = () => {
   const { t } = useTranslation('common');
   const currentYear = new Date().getFullYear();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const navigation = {
     company: [
@@ -26,21 +32,26 @@ const Footer = () => {
     ]
   };
 
+  // Function to safely render translated content
+  const renderTranslation = (key: string) => {
+    return mounted ? t(key) : key;
+  };
+
   return (
     <footer className="bg-[#0F3E61] text-white" aria-labelledby="footer-heading">
       <h2 id="footer-heading" className="sr-only">
-        {t('footer.title')}
+        {renderTranslation('footer.title')}
       </h2>
       <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <div className="xl:grid xl:grid-cols-3 xl:gap-8">
           <div className="space-y-6">
             <Link href="/" className="inline-block">
               <span className="text-2xl font-playfair-display font-bold">
-                {t('footer.brand')}
+                {renderTranslation('footer.brand')}
               </span>
             </Link>
             <p className="text-sm leading-6 text-gray-300 max-w-md">
-              {t('footer.description')}
+              {renderTranslation('footer.description')}
             </p>
             <div className="flex space-x-6">
               {navigation.social.map((item) => (
@@ -51,8 +62,8 @@ const Footer = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <span className="sr-only">{t(item.name)}</span>
-                  {t(item.name)}
+                  <span className="sr-only">{renderTranslation(item.name)}</span>
+                  {renderTranslation(item.name)}
                 </Link>
               ))}
             </div>
@@ -60,7 +71,7 @@ const Footer = () => {
           <div className="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
             <div>
               <h3 className="text-sm font-semibold leading-6 text-white uppercase tracking-wider">
-                {t('footer.sections.company')}
+                {renderTranslation('footer.sections.company')}
               </h3>
               <ul role="list" className="mt-6 space-y-4">
                 {navigation.company.map((item) => (
@@ -69,7 +80,7 @@ const Footer = () => {
                       href={item.href}
                       className="text-sm text-gray-300 hover:text-white transition-colors"
                     >
-                      {t(item.name)}
+                      {renderTranslation(item.name)}
                     </Link>
                   </li>
                 ))}
@@ -77,7 +88,7 @@ const Footer = () => {
             </div>
             <div>
               <h3 className="text-sm font-semibold leading-6 text-white uppercase tracking-wider">
-                {t('footer.sections.support')}
+                {renderTranslation('footer.sections.support')}
               </h3>
               <ul role="list" className="mt-6 space-y-4">
                 {navigation.support.map((item) => (
@@ -86,7 +97,7 @@ const Footer = () => {
                       href={item.href}
                       className="text-sm text-gray-300 hover:text-white transition-colors"
                     >
-                      {t(item.name)}
+                      {renderTranslation(item.name)}
                     </Link>
                   </li>
                 ))}
@@ -96,7 +107,7 @@ const Footer = () => {
         </div>
         <div className="mt-12 pt-8 border-t border-gray-700/50">
           <p className="text-sm text-gray-300 text-center">
-            {t('footer.copyright', { year: currentYear })}
+            {mounted ? t('footer.copyright', { year: currentYear }) : ''}
           </p>
         </div>
       </div>

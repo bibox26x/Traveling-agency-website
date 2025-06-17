@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { payments } from '../../services/api';
+import { useTranslation } from 'next-i18next';
+import toast from 'react-hot-toast';
 
 interface PaymentFormProps {
   bookingId: number;
@@ -14,6 +16,7 @@ export default function PaymentForm({ bookingId, amount, onSuccess }: PaymentFor
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
+  const { t } = useTranslation('common');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,12 +31,16 @@ export default function PaymentForm({ bookingId, amount, onSuccess }: PaymentFor
         proofImage,
       });
 
+      toast.success(t('payments.notifications.paymentSubmitted'));
+      
       if (onSuccess) {
         onSuccess();
       }
       router.push('/bookings');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to submit payment');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to submit payment';
+      setError(errorMessage);
+      toast.error(t('payments.errors.paymentFailed'));
     } finally {
       setLoading(false);
     }

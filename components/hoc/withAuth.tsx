@@ -57,7 +57,7 @@ export function withAuth<P extends object>(
       return () => {
         mounted = false;
       };
-    }, [loading, authChecked, router, adminRequired, isRedirecting]);
+    }, [loading, authChecked, router, isRedirecting]);
 
     // Show loading state while initial auth check is happening
     if (loading || !authChecked || isRedirecting) {

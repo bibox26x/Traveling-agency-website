@@ -7,13 +7,13 @@ module.exports = {
   },
   defaultNS: 'common',
   localePath: './public/locales',
-  reloadOnPrerender: true,
+  reloadOnPrerender: process.env.NODE_ENV === 'development',
   react: {
     useSuspense: false
   },
   detection: {
-    order: ['cookie', 'path', 'navigator'],
+    order: ['cookie', 'localStorage', 'path', 'navigator'],
     lookupCookie: 'NEXT_LOCALE',
-    caches: ['cookie']
+    caches: ['cookie', 'localStorage']
   }
 } 

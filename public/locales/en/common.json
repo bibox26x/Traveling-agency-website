@@ -255,7 +255,9 @@
           "fitness": "Basic fitness level",
           "clothing": "Appropriate clothing"
         }
-      }
+      },
+      "tripNotFound": "Trip not found",
+      "durationNotAvailable": "Duration not available"
     },
     "card": {
       "icons": {
@@ -348,7 +350,11 @@
     },
     "subtitle": "Manage your account settings and view your travel history",
     "settings": {
-      "description": "Manage your account preferences and settings",
+      "title": "Account Settings",
+      "notifications": "Notification Settings",
+      "language": "Language Settings",
+      "currency": "Currency Settings",
+      "privacy": "Privacy Settings",
       "showProfile": "Show my profile to other users",
       "publicBookings": "Make my bookings public"
     },
@@ -422,6 +428,22 @@
       "pending": "Payment Pending",
       "paid": "Paid",
       "refunded": "Refunded"
+    },
+    "notifications": {
+      "success": "Trip booked successfully! You can view your booking details in My Bookings.",
+      "bookingFailed": "Failed to book the trip. Please try again."
+    },
+    "errors": {
+      "loginRequired": "Please log in to book this trip",
+      "bookingFailed": "Failed to book the trip. Please try again."
+    },
+    "noPendingBookings": "You have no pending bookings at the moment",
+    "pendingTitle": "Pending Bookings",
+    "pendingDescription": "View and manage your pending bookings that require payment or confirmation",
+    "viewAllBookings": "View all bookings in profile",
+    "loading": "Loading bookings...",
+    "meta": {
+      "description": "View and manage your pending travel bookings"
     }
   },
   "reviews": {
@@ -453,7 +475,14 @@
     "total": "Total",
     "confirmPayment": "Confirm Payment",
     "paymentSuccess": "Payment Successful",
-    "paymentError": "Payment Failed"
+    "paymentError": "Payment Failed",
+    "notifications": {
+      "paymentSubmitted": "Payment submitted successfully!",
+      "paymentFailed": "Failed to process payment. Please try again."
+    },
+    "errors": {
+      "paymentFailed": "Failed to process payment. Please try again."
+    }
   },
   "admin": {
     "dashboard": "Dashboard",
@@ -890,42 +919,12 @@
     },
     "bookings": {
       "title": "My Bookings",
-      "filters": {
-        "all": "All Bookings",
-        "upcoming": "Upcoming",
-        "completed": "Completed",
-        "cancelled": "Cancelled"
-      },
-      "details": {
-        "bookingId": "Booking ID",
-        "tripName": "Trip Name",
-        "dates": "Travel Dates",
-        "status": "Status",
-        "totalPrice": "Total Price",
-        "participants": "Participants",
-        "paymentInfo": {
-          "title": "Payment Information",
-          "totalPaid": "Total Paid",
-          "remaining": "Remaining Amount",
-          "fullyPaid": "Fully Paid"
-        }
-      },
-      "actions": {
-        "viewDetails": "View Details",
-        "modifyBooking": "Modify Booking",
-        "cancelBooking": "Cancel Booking",
-        "downloadInvoice": "Download Invoice",
-        "contactSupport": "Contact Support"
-      },
-      "loading": "Loading your bookings...",
-      "error": "Error loading bookings",
-      "payment": {
-        "title": "Make a Payment",
-        "amount": "Amount to Pay",
-        "method": "Payment Method",
-        "submit": "Submit Payment",
-        "success": "Payment successful",
-        "error": "Payment failed"
+      "pendingTitle": "Pending Bookings",
+      "pendingDescription": "View and manage your pending bookings that require payment or confirmation",
+      "viewAllBookings": "View all bookings in profile",
+      "loading": "Loading bookings...",
+      "meta": {
+        "description": "View and manage your pending travel bookings"
       }
     }
   },
@@ -957,7 +956,8 @@
         "unavailable": "Selected dates are unavailable",
         "paymentFailed": "Payment processing failed",
         "invalidDates": "Invalid travel dates",
-        "noAvailability": "No availability for selected options"
+        "noAvailability": "No availability for selected options",
+        "cancellationFailed": "Failed to cancel booking. Please try again."
       }
     },
     "profile": {

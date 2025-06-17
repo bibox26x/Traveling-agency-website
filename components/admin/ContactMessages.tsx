@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'next-i18next';
 import { format } from 'date-fns';
 import { toast } from 'react-hot-toast';
@@ -18,7 +18,7 @@ export default function ContactMessages() {
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchMessages = async () => {
+  const fetchMessages = useCallback(async () => {
     try {
       const response = await fetch('/api/contact/messages', {
         credentials: 'include'
@@ -35,7 +35,7 @@ export default function ContactMessages() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [t]);
 
   const handleDelete = async (id: number) => {
     if (!window.confirm(t('admin.contact.deleteConfirm'))) {
@@ -80,7 +80,7 @@ export default function ContactMessages() {
 
   useEffect(() => {
     fetchMessages();
-  }, []);
+  }, [fetchMessages]);
 
   if (loading) {
     return (

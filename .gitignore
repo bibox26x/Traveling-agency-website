@@ -1,38 +1,103 @@
-# Node modules
-node_modules/
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
 
-# Build output
+# Testing
+/coverage
+/.nyc_output
+/cypress/videos/
+/cypress/screenshots/
+
+# Next.js
+/.next/
+/out/
+/build
 .next/
-out/
-dist/
+next-env.d.ts
 
-# Environment variables
-.env*
+# Production
+/build
+/dist
 
-# Logs
-logs/
-*.log
+# Debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.pnpm-debug.log*
 
-# OS files
-.DS_Store
-Thumbs.db
+# Local env files
+.env*.local
+.env
+.env.development
+.env.test
+.env.production
 
-# IDE and misc
-.idea/
-.vscode/
-*.tgz
-
-# Coverage
-coverage/
+# Vercel
+.vercel
 
 # TypeScript
 *.tsbuildinfo
 
-# Test
-coverage/
+# PWA
+**/public/sw.js
+**/public/workbox-*.js
+**/public/worker-*.js
+**/public/sw.js.map
+**/public/workbox-*.js.map
+**/public/worker-*.js.map
 
-# Others
-package-lock.json 
+# IDE
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+.project
+.classpath
+.settings/
+*.code-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+*.pem
+
+# Debug
+.debug/
+
+# Temp files
+*.swp
+*.swo
+*~
+
+# Logs
+logs/
+*.log
+
+# Cache
+.cache/
+.eslintcache
+.stylelintcache
+
+# Build tools
+.webpack/
+.rollup.cache/
+
+# Test coverage
+coverage/
+.coverage/
+.nyc_output/
+
+# Misc
+*.bak
+*.tmp
+*.temp
+.DS_Store*
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+[Tt]humbs.db
+[Dd]esktop.ini 

@@ -241,7 +241,9 @@
           "fitness": "Niveau de forme physique basique",
           "clothing": "Vêtements appropriés"
         }
-      }
+      },
+      "tripNotFound": "Voyage non trouvé",
+      "durationNotAvailable": "Durée non disponible"
     },
     "hero": {
       "subtitle": "Les Aventures Vous Attendent",
@@ -313,7 +315,11 @@
     },
     "subtitle": "Gérez votre compte et vos préférences de voyage",
     "settings": {
-      "description": "Personnalisez votre expérience de voyage",
+      "title": "Paramètres du compte",
+      "notifications": "Paramètres des notifications",
+      "language": "Paramètres de langue",
+      "currency": "Paramètres de devise",
+      "privacy": "Paramètres de confidentialité",
       "showProfile": "Afficher mon profil publiquement",
       "publicBookings": "Rendre mes réservations publiques"
     },
@@ -340,7 +346,6 @@
     "passengers": "Passagers",
     "totalPrice": "Prix total",
     "paymentStatusTitle": "Statut du paiement",
-    "statusTitle": "Statut de la réservation",
     "bookingStatus": "Statut de la réservation",
     "cancelBooking": "Annuler la réservation",
     "modifyBooking": "Modifier la réservation",
@@ -388,6 +393,22 @@
       "pending": "Paiement en attente",
       "paid": "Payé",
       "refunded": "Remboursé"
+    },
+    "notifications": {
+      "success": "Voyage réservé avec succès ! Vous pouvez consulter les détails de votre réservation dans Mes Réservations.",
+      "bookingFailed": "Échec de la réservation du voyage. Veuillez réessayer."
+    },
+    "errors": {
+      "loginRequired": "Veuillez vous connecter pour réserver ce voyage",
+      "bookingFailed": "Échec de la réservation du voyage. Veuillez réessayer."
+    },
+    "noPendingBookings": "Vous n'avez aucune réservation en attente pour le moment",
+    "pendingTitle": "Réservations en attente",
+    "pendingDescription": "Consultez et gérez vos réservations en attente qui nécessitent un paiement ou une confirmation",
+    "viewAllBookings": "Voir toutes les réservations dans le profil",
+    "loading": "Chargement des réservations...",
+    "meta": {
+      "description": "Consultez et gérez vos réservations de voyage en attente"
     }
   },
   "reviews": {
@@ -419,7 +440,14 @@
     "total": "Total",
     "confirmPayment": "Confirmer le paiement",
     "paymentSuccess": "Paiement réussi",
-    "paymentError": "Échec du paiement"
+    "paymentError": "Échec du paiement",
+    "notifications": {
+      "paymentSubmitted": "Paiement soumis avec succès !",
+      "paymentFailed": "Échec du traitement du paiement. Veuillez réessayer."
+    },
+    "errors": {
+      "paymentFailed": "Échec du traitement du paiement. Veuillez réessayer."
+    }
   },
   "admin": {
     "dashboard": "Tableau de bord",
@@ -856,42 +884,12 @@
     },
     "bookings": {
       "title": "Mes Réservations",
-      "filters": {
-        "all": "Toutes les Réservations",
-        "upcoming": "À Venir",
-        "completed": "Terminées",
-        "cancelled": "Annulées"
-      },
-      "details": {
-        "bookingId": "ID de Réservation",
-        "tripName": "Nom du Voyage",
-        "dates": "Dates de Voyage",
-        "status": "Statut",
-        "totalPrice": "Prix Total",
-        "participants": "Participants",
-        "paymentInfo": {
-          "title": "Informations de Paiement",
-          "totalPaid": "Total Payé",
-          "remaining": "Montant Restant",
-          "fullyPaid": "Entièrement Payé"
-        }
-      },
-      "actions": {
-        "viewDetails": "Voir les Détails",
-        "modifyBooking": "Modifier la Réservation",
-        "cancelBooking": "Annuler la Réservation",
-        "downloadInvoice": "Télécharger la Facture",
-        "contactSupport": "Contacter le Support"
-      },
-      "loading": "Chargement de vos réservations...",
-      "error": "Erreur lors du chargement des réservations",
-      "payment": {
-        "title": "Effectuer un Paiement",
-        "amount": "Montant à Payer",
-        "method": "Moyen de Paiement",
-        "submit": "Confirmer le Paiement",
-        "success": "Paiement réussi",
-        "error": "Échec du paiement"
+      "pendingTitle": "Réservations en Attente",
+      "pendingDescription": "Consultez et gérez vos réservations en attente qui nécessitent un paiement ou une confirmation",
+      "viewAllBookings": "Voir toutes les réservations dans le profil",
+      "loading": "Chargement des réservations...",
+      "meta": {
+        "description": "Consultez et gérez vos réservations de voyage en attente"
       }
     }
   },
@@ -923,7 +921,8 @@
         "unavailable": "Les dates sélectionnées ne sont pas disponibles",
         "paymentFailed": "Le traitement du paiement a échoué",
         "invalidDates": "Dates de voyage invalides",
-        "noAvailability": "Pas de disponibilité pour les options sélectionnées"
+        "noAvailability": "Pas de disponibilité pour les options sélectionnées",
+        "cancellationFailed": "Échec de l'annulation de la réservation. Veuillez réessayer."
       }
     },
     "profile": {

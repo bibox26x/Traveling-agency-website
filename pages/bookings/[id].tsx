@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../../components/layout/Layout';
 import PaymentForm from '../../components/payment/PaymentForm';
@@ -39,17 +39,12 @@ export default function BookingDetails() {
   const router = useRouter();
   const { id } = router.query;
   const { t } = useTranslation('common');
+  const { user, loading: authLoading } = useAuth();
   const [booking, setBooking] = useState<Booking | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    if (id) {
-      fetchBookingDetails();
-    }
-  }, [id]);
-
-  const fetchBookingDetails = async () => {
+  const fetchBookingDetails = useCallback(async () => {
     try {
       const response = await fetchWithAuth(`/bookings/${id}`);
       const { data } = response;
@@ -67,7 +62,22 @@ export default function BookingDetails() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id, t]);
+
+  useEffect(() => {
+    // If auth is not loading and user is not logged in, redirect to login
+    if (!authLoading && !user) {
+      router.replace(`/login?redirect=${encodeURIComponent(router.asPath)}`);
+      return;
+    }
+
+    // Only fetch booking if we have an ID and user is logged in
+    if (id && user) {
+      fetchBookingDetails();
+    } else if (!id) {
+      setLoading(false);
+    }
+  }, [id, user, authLoading, router, fetchBookingDetails]);
 
   const getPaymentStatus = () => {
     if (!booking) return null;
@@ -82,6 +92,30 @@ export default function BookingDetails() {
       isFullyPaid: totalPaid >= booking.total_price
     };
   };
+
+  // Show loading state while auth is loading or while redirecting
+  if (authLoading || (!user && loading)) {
+    return (
+      <Layout>
+        <Head>
+          <title>{t('bookings.bookingDetails')} - {t('common.brand')}</title>
+        </Head>
+        <div className="min-h-screen bg-gray-50">
+          <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-center items-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-primary-500"></div>
+              <span className="ml-3 text-gray-600">{t('pages.bookings.loading')}</span>
+            </div>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
+  // Don't render anything while redirecting to login
+  if (!user) {
+    return null;
+  }
 
   const paymentStatus = getPaymentStatus();
 

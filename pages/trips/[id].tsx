@@ -29,7 +29,7 @@ const TripDetails: React.FC<TripDetailsProps> = ({ trip }) => {
   }, []);
 
   const handleBookingSuccess = () => {
-    router.reload();
+    setIsBookingModalOpen(false);
   };
 
   const endDate = calculateEndDate(new Date(trip.startDate), trip.duration);
