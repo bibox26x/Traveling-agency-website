@@ -272,7 +272,7 @@
     "confirmPassword": "Confirmer le mot de passe",
     "confirmPasswordPlaceholder": "Confirmez votre nouveau mot de passe",
     "passwordsDoNotMatch": "Les mots de passe ne correspondent pas",
-    "passwordResetSuccess": "Réinitialisation du mot de passe réussie !",
+    "passwordResetSuccess": "Réinitialisation réussie ! Redirection vers la connexion...",
     "sendResetInstructions": "Envoyer les instructions",
     "backToEmail": "Retour à l'email",
     "rememberMe": "Se souvenir de moi",
@@ -293,7 +293,8 @@
     "accountCreated": "Compte créé avec succès",
     "signInRequired": "Connexion requise",
     "signInToViewBookings": "Veuillez vous connecter pour voir vos réservations",
-    "signIn": "Se connecter"
+    "signIn": "Se connecter",
+    "resetPasswordInstructions": "Entrez le code reçu par email et définissez votre nouveau mot de passe"
   },
   "profile": {
     "title": "Mon Profil",

@@ -329,7 +329,8 @@
     "passwordsDoNotMatch": "Passwords do not match",
     "passwordResetSuccess": "Password reset successful!",
     "sendResetInstructions": "Send Reset Instructions",
-    "backToEmail": "Back to Email"
+    "backToEmail": "Back to Email",
+    "resetPasswordInstructions": "Enter the code from your email and set your new password"
   },
   "profile": {
     "title": "My Profile",

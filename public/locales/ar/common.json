@@ -293,9 +293,10 @@
     "newPasswordPlaceholder": "أدخل كلمة المرور الجديدة",
     "confirmPasswordPlaceholder": "تأكيد كلمة المرور الجديدة",
     "passwordsDoNotMatch": "كلمات المرور غير متطابقة",
-    "passwordResetSuccess": "تم إعادة تعيين كلمة المرور بنجاح!",
+    "passwordResetSuccess": "تم إعادة تعيين كلمة المرور بنجاح! جاري التحويل إلى صفحة تسجيل الدخول...",
     "sendResetInstructions": "إرسال تعليمات إعادة التعيين",
-    "backToEmail": "العودة إلى البريد الإلكتروني"
+    "backToEmail": "العودة إلى البريد الإلكتروني",
+    "resetPasswordInstructions": "أدخل الرمز المرسل إلى بريدك الإلكتروني وقم بتعيين كلمة المرور الجديدة"
   },
   "profile": {
     "title": "ملفي الشخصي",
