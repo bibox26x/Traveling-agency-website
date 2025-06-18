@@ -18,7 +18,7 @@ const ResetPasswordForm: React.FC = () => {
   const [isEmailFromLink, setIsEmailFromLink] = useState(false);
   const router = useRouter();
 
-  // Handle token and email from URL
+  // Handle token from URL
   useEffect(() => {
     const { token, email } = router.query;
     if (token || email) {
@@ -71,135 +71,122 @@ const ResetPasswordForm: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full">
-        <div className="text-center">
-          <h2 className="text-3xl font-display font-bold tracking-tight text-gray-900">
+    <div className="bg-white shadow-2xl rounded-3xl px-8 py-10 max-w-md mx-auto">
+      <form className="space-y-6" onSubmit={handleSubmit}>
+        {error && (
+          <div className="rounded-lg bg-red-50 border border-red-200 p-4">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <p className="text-sm text-red-700 font-medium">{error}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {message && (
+          <div className="rounded-lg bg-green-50 border border-green-200 p-4">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <p className="text-sm text-green-700 font-medium">{message}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="space-y-4">
+          {!isEmailFromLink && (
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                {t('ui.form.email')}
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="username email"
+                required
+                className="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
+                placeholder={t('auth.emailPlaceholder')}
+                value={formData.email}
+                onChange={handleChange}
+              />
+            </div>
+          )}
+
+          <div>
+            <label htmlFor="token" className="block text-sm font-medium text-gray-700 mb-1">
+              {t('auth.resetCode')}
+            </label>
+            <input
+              id="token"
+              name="token"
+              type="text"
+              autoComplete="off"
+              required
+              className="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
+              placeholder={t('auth.resetCodePlaceholder')}
+              value={formData.token}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="new-password" className="block text-sm font-medium text-gray-700 mb-1">
+              {t('auth.newPassword')}
+            </label>
+            <input
+              id="new-password"
+              name="newPassword"
+              type="password"
+              autoComplete="new-password"
+              required
+              className="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
+              placeholder={t('auth.newPasswordPlaceholder')}
+              value={formData.newPassword}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700 mb-1">
+              {t('auth.confirmPassword')}
+            </label>
+            <input
+              id="confirm-password"
+              name="confirmPassword"
+              type="password"
+              autoComplete="new-password"
+              required
+              className="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
+              placeholder={t('auth.confirmPasswordPlaceholder')}
+              value={formData.confirmPassword}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
+
+        <div className="pt-2">
+          <Button
+            type="submit"
+            variant="primary"
+            isLoading={isLoading}
+            fullWidth
+            size="lg"
+          >
             {t('auth.resetPassword')}
-          </h2>
-          <p className="mt-2 text-sm text-gray-600">
-            {t('auth.resetPasswordInstructions')}
-          </p>
+          </Button>
         </div>
-
-        <div className="mt-8 bg-white shadow-2xl rounded-3xl px-8 py-10">
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            {error && (
-              <div className="rounded-lg bg-red-50 border border-red-200 p-4">
-                <div className="flex">
-                  <div className="flex-shrink-0">
-                    <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <div className="ml-3">
-                    <p className="text-sm text-red-700 font-medium">{error}</p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {message && (
-              <div className="rounded-lg bg-green-50 border border-green-200 p-4">
-                <div className="flex">
-                  <div className="flex-shrink-0">
-                    <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <div className="ml-3">
-                    <p className="text-sm text-green-700 font-medium">{message}</p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            <div className="space-y-4">
-              {!isEmailFromLink && (
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                    {t('ui.form.email')}
-                  </label>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="username email"
-                    required
-                    className="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
-                    placeholder={t('auth.emailPlaceholder')}
-                    value={formData.email}
-                    onChange={handleChange}
-                  />
-                </div>
-              )}
-
-              <div>
-                <label htmlFor="token" className="block text-sm font-medium text-gray-700 mb-1">
-                  {t('auth.resetCode')}
-                </label>
-                <input
-                  id="token"
-                  name="token"
-                  type="text"
-                  autoComplete="off"
-                  required
-                  className="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
-                  placeholder={t('auth.resetCodePlaceholder')}
-                  value={formData.token}
-                  onChange={handleChange}
-                />
-              </div>
-
-              <div>
-                <label htmlFor="new-password" className="block text-sm font-medium text-gray-700 mb-1">
-                  {t('auth.newPassword')}
-                </label>
-                <input
-                  id="new-password"
-                  name="newPassword"
-                  type="password"
-                  autoComplete="new-password"
-                  required
-                  className="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
-                  placeholder={t('auth.newPasswordPlaceholder')}
-                  value={formData.newPassword}
-                  onChange={handleChange}
-                />
-              </div>
-
-              <div>
-                <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700 mb-1">
-                  {t('auth.confirmPassword')}
-                </label>
-                <input
-                  id="confirm-password"
-                  name="confirmPassword"
-                  type="password"
-                  autoComplete="new-password"
-                  required
-                  className="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
-                  placeholder={t('auth.confirmPasswordPlaceholder')}
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-
-            <div className="pt-2">
-              <Button
-                type="submit"
-                variant="primary"
-                isLoading={isLoading}
-                fullWidth
-                size="lg"
-              >
-                {t('auth.resetPassword')}
-              </Button>
-            </div>
-          </form>
-        </div>
-      </div>
+      </form>
     </div>
   );
 };
