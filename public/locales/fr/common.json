@@ -262,7 +262,19 @@
   "auth": {
     "emailPlaceholder": "Entrez votre email",
     "passwordPlaceholder": "Entrez votre mot de passe",
-    "forgotPassword": "Mot de passe oublié ?",
+    "forgotPassword": "Mot de passe oublié",
+    "resetPassword": "Réinitialiser le mot de passe",
+    "resetCode": "Code de réinitialisation",
+    "resetCodeSent": "Le code de réinitialisation a été envoyé à votre email",
+    "resetCodePlaceholder": "Entrez le code à 6 chiffres",
+    "newPassword": "Nouveau mot de passe",
+    "newPasswordPlaceholder": "Entrez votre nouveau mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "confirmPasswordPlaceholder": "Confirmez votre nouveau mot de passe",
+    "passwordsDoNotMatch": "Les mots de passe ne correspondent pas",
+    "passwordResetSuccess": "Réinitialisation du mot de passe réussie !",
+    "sendResetInstructions": "Envoyer les instructions",
+    "backToEmail": "Retour à l'email",
     "rememberMe": "Se souvenir de moi",
     "noAccount": "Vous n'avez pas de compte ?",
     "hasAccount": "Vous avez déjà un compte ?",
@@ -274,7 +286,6 @@
     "firstName": "Prénom",
     "lastName": "Nom",
     "phone": "Numéro de téléphone",
-    "confirmPassword": "Confirmer le mot de passe",
     "agreeToTerms": "J'accepte les conditions générales",
     "passwordRequirements": "Le mot de passe doit contenir au moins 8 caractères",
     "invalidEmail": "Veuillez entrer une adresse email valide",
@@ -667,7 +678,8 @@
     "serverError": "Erreur serveur",
     "tryAgain": "Veuillez réessayer",
     "fetchBookings": "Échec du chargement des réservations. Veuillez réessayer.",
-    "fetchBookingDetails": "Échec du chargement des détails de la réservation. Veuillez réessayer."
+    "fetchBookingDetails": "Échec du chargement des détails de la réservation. Veuillez réessayer.",
+    "unexpectedError": "Une erreur s'est produite. Veuillez réessayer plus tard."
   },
   "languages": {
     "english": "Anglais",
@@ -693,7 +705,7 @@
   },
   "ui": {
     "form": {
-      "email": "Email",
+      "email": "Adresse email",
       "password": "Mot de passe",
       "required": "Requis",
       "optional": "Optionnel",

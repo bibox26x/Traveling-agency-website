@@ -76,7 +76,8 @@
     "duration": "المدة",
     "rating": "{{rating}} من 5 نجوم",
     "brand": "وكالة السفر",
-    "dismiss": "إغلاق"
+    "dismiss": "إغلاق",
+    "close": "إغلاق"
   },
   "home": {
     "meta": {
@@ -263,7 +264,7 @@
   "auth": {
     "emailPlaceholder": "أدخل بريدك الإلكتروني",
     "passwordPlaceholder": "أدخل كلمة المرور",
-    "forgotPassword": "نسيت كلمة المرور؟",
+    "forgotPassword": "نسيت كلمة المرور",
     "rememberMe": "تذكرني",
     "noAccount": "ليس لديك حساب؟",
     "hasAccount": "لديك حساب بالفعل؟",
@@ -283,7 +284,18 @@
     "accountCreated": "تم إنشاء الحساب بنجاح",
     "signInRequired": "تسجيل الدخول مطلوب",
     "signInToViewBookings": "يرجى تسجيل الدخول لعرض حجوزاتك",
-    "signIn": "تسجيل الدخول"
+    "signIn": "تسجيل الدخول",
+    "resetPassword": "إعادة تعيين كلمة المرور",
+    "resetCode": "رمز إعادة التعيين",
+    "resetCodeSent": "تم إرسال رمز إعادة التعيين إلى بريدك الإلكتروني",
+    "resetCodePlaceholder": "أدخل الرمز المكون من 6 أرقام",
+    "newPassword": "كلمة المرور الجديدة",
+    "newPasswordPlaceholder": "أدخل كلمة المرور الجديدة",
+    "confirmPasswordPlaceholder": "تأكيد كلمة المرور الجديدة",
+    "passwordsDoNotMatch": "كلمات المرور غير متطابقة",
+    "passwordResetSuccess": "تم إعادة تعيين كلمة المرور بنجاح!",
+    "sendResetInstructions": "إرسال تعليمات إعادة التعيين",
+    "backToEmail": "العودة إلى البريد الإلكتروني"
   },
   "profile": {
     "title": "ملفي الشخصي",
@@ -668,7 +680,8 @@
     "serverError": "خطأ في الخادم",
     "tryAgain": "يرجى المحاولة مرة أخرى",
     "fetchBookings": "فشل في تحميل الحجوزات. يرجى المحاولة مرة أخرى.",
-    "fetchBookingDetails": "فشل في تحميل تفاصيل الحجز. يرجى المحاولة مرة أخرى."
+    "fetchBookingDetails": "فشل في تحميل تفاصيل الحجز. يرجى المحاولة مرة أخرى.",
+    "unexpectedError": "حدث خطأ. يرجى المحاولة مرة أخرى لاحقاً."
   },
   "languages": {
     "english": "الإنجليزية",

@@ -144,6 +144,40 @@ export const auth = {
     }
   },
 
+  forgotPassword: async (email: string) => {
+    try {
+      const response = await api.post('/auth/forgot-password', { email });
+      return response.data;
+    } catch (error: any) {
+      if (error.response?.data?.message) {
+        throw new Error(error.response.data.message);
+      } else if (error.message) {
+        throw new Error(error.message);
+      } else {
+        throw new Error('Failed to send reset instructions');
+      }
+    }
+  },
+
+  resetPassword: async (email: string, token: string, newPassword: string) => {
+    try {
+      const response = await api.post('/auth/reset-password', {
+        email,
+        token,
+        newPassword,
+      });
+      return response.data;
+    } catch (error: any) {
+      if (error.response?.data?.message) {
+        throw new Error(error.response.data.message);
+      } else if (error.message) {
+        throw new Error(error.message);
+      } else {
+        throw new Error('Failed to reset password');
+      }
+    }
+  },
+
   refreshToken: async () => {
     // Use debouncing to prevent multiple concurrent refresh requests
     if (refreshPromise) {

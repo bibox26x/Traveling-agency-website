@@ -9,6 +9,7 @@ import Layout from '../components/layout/Layout';
 import Button from '../components/ui/Button';
 import { useAuth } from '../context/AuthContext';
 import { ApiErrorResponse } from '../types/api';
+import ForgotPasswordModal from '../components/auth/ForgotPasswordModal';
 
 export default function Login() {
   const router = useRouter();
@@ -19,6 +20,7 @@ export default function Login() {
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isForgotPasswordOpen, setIsForgotPasswordOpen] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -135,9 +137,13 @@ export default function Login() {
                   </div>
 
                   <div className="text-sm">
-                    <Link href="/forgot-password" className="font-medium text-primary-600 hover:text-primary-500 transition">
+                    <button
+                      type="button"
+                      onClick={() => setIsForgotPasswordOpen(true)}
+                      className="font-medium text-primary-600 hover:text-primary-500 transition"
+                    >
                       {t('auth.forgotPassword')}
-                    </Link>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -166,6 +172,11 @@ export default function Login() {
           </div>
         </div>
       </div>
+
+      <ForgotPasswordModal
+        isOpen={isForgotPasswordOpen}
+        onClose={() => setIsForgotPasswordOpen(false)}
+      />
     </Layout>
   );
 }
