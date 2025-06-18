@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'next-i18next';
+import { useRouter } from 'next/router';
 import { auth } from '../../services/api';
 import Button from '../ui/Button';
 
@@ -10,6 +11,7 @@ interface ForgotPasswordModalProps {
 
 const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ isOpen, onClose }) => {
   const { t } = useTranslation('common');
+  const router = useRouter();
   const [step, setStep] = useState<'email' | 'reset'>('email');
   const [email, setEmail] = useState('');
   const [resetToken, setResetToken] = useState('');
@@ -18,6 +20,16 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ isOpen, onClo
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  // Handle token and email from URL
+  useEffect(() => {
+    const { token, email } = router.query;
+    if (token && email) {
+      setEmail(email as string);
+      setResetToken(token as string);
+      setStep('reset');
+    }
+  }, [router.query]);
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -129,6 +141,7 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ isOpen, onClo
                   id="email"
                   name="email"
                   type="email"
+                  autoComplete="username email"
                   required
                   className="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
                   value={email}
@@ -159,6 +172,25 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ isOpen, onClo
             </form>
           ) : (
             <form onSubmit={handleResetSubmit} className="space-y-6">
+              {!router.query.email && (
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                    {t('ui.form.email')}
+                  </label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="username email"
+                    required
+                    className="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder={t('auth.emailPlaceholder')}
+                  />
+                </div>
+              )}
+
               <div>
                 <label htmlFor="reset-token" className="block text-sm font-medium text-gray-700 mb-1">
                   {t('auth.resetCode')}
@@ -167,6 +199,7 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ isOpen, onClo
                   id="reset-token"
                   name="reset-token"
                   type="text"
+                  autoComplete="off"
                   required
                   className="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
                   value={resetToken}
@@ -183,6 +216,7 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ isOpen, onClo
                   id="new-password"
                   name="new-password"
                   type="password"
+                  autoComplete="new-password"
                   required
                   className="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
                   value={newPassword}
@@ -199,6 +233,7 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ isOpen, onClo
                   id="confirm-password"
                   name="confirm-password"
                   type="password"
+                  autoComplete="new-password"
                   required
                   className="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
                   value={confirmPassword}

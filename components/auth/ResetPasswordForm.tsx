@@ -15,17 +15,21 @@ const ResetPasswordForm: React.FC = () => {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isEmailFromLink, setIsEmailFromLink] = useState(false);
   const router = useRouter();
 
-  // Handle token from URL
+  // Handle token and email from URL
   useEffect(() => {
     const { token, email } = router.query;
-    if (token) {
+    if (token || email) {
       setFormData(prev => ({
         ...prev,
-        token: token as string,
+        token: token as string || prev.token,
         email: email as string || prev.email
       }));
+      if (email) {
+        setIsEmailFromLink(true);
+      }
     }
   }, [router.query]);
 
@@ -111,22 +115,24 @@ const ResetPasswordForm: React.FC = () => {
             )}
 
             <div className="space-y-4">
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                  {t('ui.form.email')}
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  className="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
-                  placeholder={t('auth.emailPlaceholder')}
-                  value={formData.email}
-                  onChange={handleChange}
-                />
-              </div>
+              {!isEmailFromLink && (
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                    {t('ui.form.email')}
+                  </label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="username email"
+                    required
+                    className="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
+                    placeholder={t('auth.emailPlaceholder')}
+                    value={formData.email}
+                    onChange={handleChange}
+                  />
+                </div>
+              )}
 
               <div>
                 <label htmlFor="token" className="block text-sm font-medium text-gray-700 mb-1">
@@ -136,6 +142,7 @@ const ResetPasswordForm: React.FC = () => {
                   id="token"
                   name="token"
                   type="text"
+                  autoComplete="off"
                   required
                   className="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
                   placeholder={t('auth.resetCodePlaceholder')}
@@ -152,6 +159,7 @@ const ResetPasswordForm: React.FC = () => {
                   id="new-password"
                   name="newPassword"
                   type="password"
+                  autoComplete="new-password"
                   required
                   className="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
                   placeholder={t('auth.newPasswordPlaceholder')}
@@ -168,6 +176,7 @@ const ResetPasswordForm: React.FC = () => {
                   id="confirm-password"
                   name="confirmPassword"
                   type="password"
+                  autoComplete="new-password"
                   required
                   className="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
                   placeholder={t('auth.confirmPasswordPlaceholder')}
