@@ -80,7 +80,7 @@
   },
   "home": {
     "meta": {
-      "title": "Travel Agency - Your Journey Begins Here",
+      "title": "Your Journey Begins",
       "description": "Discover amazing travel destinations and adventures around the world"
     },
     "hero": {
@@ -724,20 +724,34 @@
     "arabic": "Arabic"
   },
   "meta": {
-    "defaultTitle": "Travel Agency - Your Journey Begins Here",
-    "defaultDescription": "Discover amazing travel destinations and adventures around the world. Expert guides, curated experiences, and unforgettable memories await.",
-    "defaultKeywords": "travel, adventure, destinations, trips, tours, vacation, holiday, booking, travel agency",
+    "defaultTitle": "Discover Your Next Adventure",
+    "defaultDescription": "Discover amazing travel destinations and adventures around the world",
+    "defaultKeywords": "travel, adventure, destinations, trips, tours, experiences",
+    "home": {
+      "title": "Your Journey Begins"
+    },
     "destinations": {
-      "title": "Explore Amazing Destinations | Travel Agency",
-      "description": "Discover handpicked destinations around the world. From exotic beaches to mountain retreats, find your perfect travel destination."
+      "title": "Explore Destinations"
     },
     "trips": {
-      "title": "Adventure Trips & Tours | Travel Agency",
-      "description": "Browse our collection of carefully curated trips and tours. Expert guides, unique experiences, and hassle-free planning."
+      "title": "Adventure Awaits"
     },
-    "about": {
-      "title": "About Us | Travel Agency",
-      "description": "Learn about our passion for travel and commitment to creating unforgettable experiences for our clients."
+    "profile": {
+      "title": "Travel Dashboard"
+    },
+    "bookings": {
+      "title": "Your Adventures"
+    },
+    "admin": {
+      "title": "Command Center"
+    },
+    "contact": {
+      "title": "Get in Touch"
+    },
+    "auth": {
+      "login": "Welcome Back",
+      "register": "Start Your Journey",
+      "resetPassword": "Reset Password"
     }
   },
   "ui": {

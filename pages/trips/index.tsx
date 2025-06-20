@@ -8,6 +8,7 @@ import TripFilters from '../../components/trips/TripFilters';
 import { Trip, TripFilters as TripFiltersType } from '../../types/trip';
 import { trips } from '../../services/api';
 import { useTranslation } from 'next-i18next';
+import { SEO } from '../../components/layout/SEO';
 
 interface TripsPageProps {
   availableTrips: Trip[];
@@ -66,6 +67,11 @@ const TripsPage: React.FC<TripsPageProps> = ({ availableTrips }) => {
         <title>{t('meta.trips.title')}</title>
         <meta name="description" content={t('meta.trips.description')} />
       </Head>
+
+      <SEO
+        title={t('meta.trips.title')}
+        description={t('meta.defaultDescription')}
+      />
 
       {/* Hero Section */}
       <div className="relative min-h-[60vh] w-full flex items-center">

@@ -10,6 +10,7 @@ import DestinationCard from '../components/DestinationCard';
 import { Destination } from '../types/destination';
 import { getAllDestinations } from '../services/destinationService';
 import Hero from '../components/sections/Hero';
+import { SEO } from '../components/layout/SEO';
 
 interface HomePageProps {
   destinations: Destination[];
@@ -24,6 +25,11 @@ const HomePage: React.FC<HomePageProps> = ({ destinations }) => {
         <title>{t('home.meta.title')}</title>
         <meta name="description" content={t('home.meta.description')} />
       </Head>
+
+      <SEO
+        title={t('meta.home.title')}
+        description={t('meta.defaultDescription')}
+      />
 
       <Hero />
 

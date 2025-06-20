@@ -24,7 +24,7 @@ export const SEO: React.FC<SEOProps> = ({
   const locale = router.locale || 'en';
 
   // Get translated meta content or fallback to provided values
-  const metaTitle = title ? title + ' - ' + t('common.brand') : t('meta.defaultTitle');
+  const metaTitle = title || t('meta.defaultTitle');
   const metaDescription = description || t('meta.defaultDescription');
   const metaKeywords = keywords || t('meta.defaultKeywords');
 

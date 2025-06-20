@@ -688,20 +688,34 @@
     "arabic": "Arabe"
   },
   "meta": {
-    "defaultTitle": "Agence de Voyage - Votre Voyage Commence Ici",
-    "defaultDescription": "Découvrez des destinations de voyage et des aventures incroyables à travers le monde. Guides experts, expériences sélectionnées et souvenirs inoubliables vous attendent.",
-    "defaultKeywords": "voyage, aventure, destinations, excursions, tours, vacances, réservation, agence de voyage",
+    "defaultTitle": "Découvrez Votre Prochaine Aventure",
+    "defaultDescription": "Découvrez des destinations de voyage incroyables et des aventures à travers le monde",
+    "defaultKeywords": "voyage, aventure, destinations, excursions, tours, expériences",
+    "home": {
+      "title": "Votre Voyage Commence"
+    },
     "destinations": {
-      "title": "Explorez des Destinations Incroyables | Agence de Voyage",
-      "description": "Découvrez des destinations sélectionnées à travers le monde. Des plages exotiques aux retraites montagneuses, trouvez votre destination de voyage parfaite."
+      "title": "Explorez le Monde"
     },
     "trips": {
-      "title": "Voyages d'Aventure & Circuits | Agence de Voyage",
-      "description": "Parcourez notre collection de voyages et circuits soigneusement sélectionnés. Guides experts, expériences uniques et planification sans tracas."
+      "title": "L'Aventure Vous Attend"
     },
-    "about": {
-      "title": "À Propos de Nous | Agence de Voyage",
-      "description": "Découvrez notre passion pour le voyage et notre engagement à créer des expériences inoubliables pour nos clients."
+    "profile": {
+      "title": "Tableau de Voyage"
+    },
+    "bookings": {
+      "title": "Vos Aventures"
+    },
+    "admin": {
+      "title": "Centre de Contrôle"
+    },
+    "contact": {
+      "title": "Contactez-Nous"
+    },
+    "auth": {
+      "login": "Bon Retour",
+      "register": "Commencez l'Aventure",
+      "resetPassword": "Réinitialiser"
     }
   },
   "ui": {
