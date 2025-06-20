@@ -1,70 +1,45 @@
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
-import type { Trip } from '../../types/trip';
+import { useTranslation } from 'next-i18next';
+import { Trip } from '../../types/trip';
+import LazyLoadImage from '../ui/LazyLoadImage';
 
-interface Props {
+interface TripCardProps {
   trip: Trip;
 }
 
-export default function TripCard({ trip }: Props) {
-  const {
-    id,
-    title,
-    location,
-    description,
-    price,
-    startDate,
-    duration,
-    imageUrl,
-  } = trip;
-
-  const formattedStartDate = new Date(startDate).toLocaleDateString();
-  const endDate = new Date(startDate);
-  endDate.setDate(endDate.getDate() + (duration - 1));
-  const formattedEndDate = endDate.toLocaleDateString();
+export default function TripCard({ trip }: TripCardProps) {
+  const { t } = useTranslation('common');
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col overflow-hidden border border-gray-100">
-      <div className="relative h-48 w-full">
-        {imageUrl ? (
-          <Image
-            src={imageUrl}
-            alt={title}
-            fill
-            className="object-cover"
-          />
-        ) : (
-          <div className="h-full bg-gradient-to-r from-blue-200 to-blue-400 flex items-center justify-center">
-            <span className="text-5xl text-white font-bold drop-shadow">✈️</span>
-          </div>
-        )}
-      </div>
-
-      <div className="p-6 flex flex-col flex-1">
-        <h3 className="text-2xl font-bold mb-1 text-blue-700">{title}</h3>
-        <p className="text-gray-500 mb-2 font-medium">{location}</p>
-        <p className="mb-3 text-gray-700 line-clamp-3">{description}</p>
-        
-        <div className="flex flex-wrap gap-2 text-sm text-gray-500 mb-2">
-          <span className="bg-blue-50 px-2 py-1 rounded">
-            {formattedStartDate} - {formattedEndDate}
-          </span>
-          <span className="bg-blue-50 px-2 py-1 rounded">
-            {duration} days
-          </span>
-        </div>
-
-        <div className="mt-auto flex items-center justify-between">
-          <span className="text-xl font-bold text-blue-600">${price}</span>
-          <Link
-            href={`/trips/${id}`}
-            className="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-          >
-            View Details
-          </Link>
+    <Link
+      href={`/trips/${trip.id}`}
+      className="group block overflow-hidden rounded-2xl bg-white shadow-lg transition-all duration-500 transform hover:-translate-y-1 hover:shadow-xl"
+    >
+      <div className="relative h-72 w-full overflow-hidden">
+        <LazyLoadImage
+          src={trip.imageUrl || '/images/placeholder.jpg'}
+          alt={trip.title}
+          fill
+          className="object-cover transform transition-transform duration-700 group-hover:scale-110"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          quality={75}
+          containerClassName="absolute inset-0"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-60 transition-opacity duration-300" />
+        <div className="absolute right-4 top-4 rounded-full bg-white/90 backdrop-blur-sm px-4 py-2 text-sm font-semibold text-primary-900 shadow-lg">
+          {t('common.fromPrice', { price: trip.price })}
         </div>
       </div>
-    </div>
+      <div className="p-6">
+        <h3 className="text-xl font-semibold text-gray-900">{trip.title}</h3>
+        <p className="mt-2 text-sm text-gray-500">
+          {t('common.duration', { duration: trip.duration })}
+        </p>
+        <p className="mt-4 text-base text-gray-600 line-clamp-2">
+          {trip.description}
+        </p>
+      </div>
+    </Link>
   );
 } 

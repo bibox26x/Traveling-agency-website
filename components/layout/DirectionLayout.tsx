@@ -73,7 +73,7 @@ const DirectionLayout: React.FC<DirectionLayoutProps> = ({ children }) => {
         document.body.classList.remove('rtl', 'ltr');
       }
     };
-  }, [router, router.locale, router.pathname, router.asPath, i18n, mounted]);
+  }, [router.locale, router.pathname, router.asPath, i18n, mounted]);
 
   const currentLang = languages.find(lang => lang.code === router.locale) || languages[0];
   const isRTL = currentLang.dir === 'rtl';

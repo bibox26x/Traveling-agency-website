@@ -1,10 +1,10 @@
 import React from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardBody, CardFooter } from '@heroui/react';
 import { useTranslation } from 'next-i18next';
 import { Destination } from '../types/destination';
 import clsx from 'clsx';
+import LazyLoadImage from './ui/LazyLoadImage';
 
 interface DestinationCardProps {
   destination: Destination;
@@ -21,13 +21,14 @@ const DestinationCard: React.FC<DestinationCardProps> = ({ destination }) => {
     >
       <Card className="group/card relative overflow-hidden rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-1">
         <div className="relative h-72 w-full overflow-hidden">
-          <Image
-            src={destination.imageUrl}
+          <LazyLoadImage
+            src={destination.imageUrl || '/images/placeholder.jpg'}
             alt={destination.name}
             fill
             className="object-cover transform transition-transform duration-700 group-hover:scale-110"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            priority
+            quality={75}
+            containerClassName="absolute inset-0"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-60 transition-opacity duration-300" />
           

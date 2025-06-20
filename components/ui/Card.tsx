@@ -1,7 +1,7 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { clsx } from 'clsx';
 import { useTranslation } from 'next-i18next';
+import LazyLoadImage from './LazyLoadImage';
 
 interface CardProps {
   title: string;
@@ -37,11 +37,14 @@ export default function Card({
       )}
     >
       <div className="aspect-h-2 aspect-w-3 relative">
-        <Image
+        <LazyLoadImage
           src={imageSrc}
           alt={imageAlt}
           fill
           className="object-cover transition-transform duration-300 group-hover:scale-105"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          quality={75}
+          aspectRatio={3/2}
         />
         {price && (
           <div className="absolute right-4 top-4 rounded-full bg-white px-4 py-2 text-sm font-semibold text-primary-900 shadow-md">

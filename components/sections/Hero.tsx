@@ -1,6 +1,6 @@
-import Image from 'next/image';
-import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
+import Link from 'next/link';
+import OptimizedImage from '../ui/OptimizedImage';
 
 export default function Hero() {
   const { t } = useTranslation('common');
@@ -9,14 +9,15 @@ export default function Hero() {
     <div className="relative min-h-[90vh] w-full flex items-center">
       {/* Background Image */}
       <div className="absolute inset-0">
-        <Image
+        <OptimizedImage
           src="/images/hero-bg.jpg"
           alt={t('home.hero.backgroundAlt')}
           fill
           priority
           className="object-cover"
           sizes="100vw"
-          quality={90}
+          quality={85}
+          lowQualityPlaceholder={true}
         />
         <div className="absolute inset-0 bg-[#0F3E61]/80" />
       </div>

@@ -35,7 +35,9 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hot-toast": "^2.5.2",
-    "react-i18next": "^15.5.3"
+    "react-i18next": "^15.5.3",
+    "react-intersection-observer": "^9.16.0",
+    "sharp": "^0.34.2"
   },
   "devDependencies": {
     "@babel/core": "^7.27.4",
@@ -52,8 +54,10 @@
     "autoprefixer": "^10.4.21",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "babel-preset-next": "^1.4.0",
+    "critters": "^0.0.23",
     "eslint": "8.56.0",
     "eslint-config-next": "14.2.3",
+    "image-webpack-loader": "^8.1.0",
     "jest": "^30.0.0",
     "jest-environment-jsdom": "^30.0.0",
     "postcss": "^8.5.5",
