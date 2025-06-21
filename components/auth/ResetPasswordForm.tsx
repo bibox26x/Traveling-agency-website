@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import axios from 'axios';
 import { useTranslation } from 'next-i18next';
 import Button from '../ui/Button';
+import { auth } from '../../services/api';
 
 const ResetPasswordForm: React.FC = () => {
   const { t } = useTranslation('common');
@@ -53,18 +53,13 @@ const ResetPasswordForm: React.FC = () => {
     setMessage('');
 
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}auth/reset-password`, {
-        email: formData.email,
-        token: formData.token,
-        newPassword: formData.newPassword,
-      });
-
+      await auth.resetPassword(formData.email, formData.token, formData.newPassword);
       setMessage(t('auth.passwordResetSuccess'));
       setTimeout(() => {
         router.push('/login');
       }, 3000);
     } catch (err: any) {
-      setError(err.response?.data?.error || t('errors.unexpectedError'));
+      setError(err.message || t('errors.unexpectedError'));
     } finally {
       setIsLoading(false);
     }
@@ -72,6 +67,15 @@ const ResetPasswordForm: React.FC = () => {
 
   return (
     <div className="bg-white shadow-2xl rounded-3xl px-8 py-10 max-w-md mx-auto">
+      <div className="text-center mb-8">
+        <h2 className="text-3xl font-bold text-gray-900 mb-3">
+          {t('auth.resetPassword')}
+        </h2>
+        <p className="text-gray-600">
+          {t('auth.resetPasswordInstructions')}
+        </p>
+      </div>
+
       <form className="space-y-6" onSubmit={handleSubmit}>
         {error && (
           <div className="rounded-lg bg-red-50 border border-red-200 p-4">
@@ -103,76 +107,74 @@ const ResetPasswordForm: React.FC = () => {
           </div>
         )}
 
-        <div className="space-y-4">
-          {!isEmailFromLink && (
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                {t('ui.form.email')}
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="username email"
-                required
-                className="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
-                placeholder={t('auth.emailPlaceholder')}
-                value={formData.email}
-                onChange={handleChange}
-              />
-            </div>
-          )}
-
+        {!isEmailFromLink && (
           <div>
-            <label htmlFor="token" className="block text-sm font-medium text-gray-700 mb-1">
-              {t('auth.resetCode')}
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+              {t('ui.form.email')}
             </label>
             <input
-              id="token"
-              name="token"
-              type="text"
-              autoComplete="off"
+              id="email"
+              name="email"
+              type="email"
+              autoComplete="username email"
               required
               className="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
-              placeholder={t('auth.resetCodePlaceholder')}
-              value={formData.token}
+              placeholder={t('auth.emailPlaceholder')}
+              value={formData.email}
               onChange={handleChange}
             />
           </div>
+        )}
 
-          <div>
-            <label htmlFor="new-password" className="block text-sm font-medium text-gray-700 mb-1">
-              {t('auth.newPassword')}
-            </label>
-            <input
-              id="new-password"
-              name="newPassword"
-              type="password"
-              autoComplete="new-password"
-              required
-              className="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
-              placeholder={t('auth.newPasswordPlaceholder')}
-              value={formData.newPassword}
-              onChange={handleChange}
-            />
-          </div>
+        <div>
+          <label htmlFor="token" className="block text-sm font-medium text-gray-700 mb-1">
+            {t('auth.resetCode')}
+          </label>
+          <input
+            id="token"
+            name="token"
+            type="text"
+            autoComplete="off"
+            required
+            className="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
+            placeholder={t('auth.resetCodePlaceholder')}
+            value={formData.token}
+            onChange={handleChange}
+          />
+        </div>
 
-          <div>
-            <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700 mb-1">
-              {t('auth.confirmPassword')}
-            </label>
-            <input
-              id="confirm-password"
-              name="confirmPassword"
-              type="password"
-              autoComplete="new-password"
-              required
-              className="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
-              placeholder={t('auth.confirmPasswordPlaceholder')}
-              value={formData.confirmPassword}
-              onChange={handleChange}
-            />
-          </div>
+        <div>
+          <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 mb-1">
+            {t('auth.newPassword')}
+          </label>
+          <input
+            id="newPassword"
+            name="newPassword"
+            type="password"
+            autoComplete="new-password"
+            required
+            className="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
+            placeholder={t('auth.newPasswordPlaceholder')}
+            value={formData.newPassword}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div>
+          <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
+            {t('auth.confirmPassword')}
+          </label>
+          <input
+            id="confirmPassword"
+            name="confirmPassword"
+            type="password"
+            autoComplete="new-password"
+            required
+            className="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-200 focus:outline-none transition"
+            placeholder={t('auth.confirmPasswordPlaceholder')}
+            value={formData.confirmPassword}
+            onChange={handleChange}
+          />
         </div>
 
         <div className="pt-2">

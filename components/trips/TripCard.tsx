@@ -20,7 +20,7 @@ export default function TripCard({ trip }: TripCardProps) {
         <LazyLoadImage
           src={trip.imageUrl || '/images/placeholder.jpg'}
           alt={trip.title}
-          fill
+            fill
           className="object-cover transform transition-transform duration-700 group-hover:scale-110"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           quality={75}
@@ -39,7 +39,7 @@ export default function TripCard({ trip }: TripCardProps) {
         <p className="mt-4 text-base text-gray-600 line-clamp-2">
           {trip.description}
         </p>
-      </div>
+    </div>
     </Link>
   );
 } 
