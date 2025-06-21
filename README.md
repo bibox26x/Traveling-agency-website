@@ -116,4 +116,5 @@ To add a new language:
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details
+
+    Travel Agency Website  © 2025 by Wael Bahi is licensed under CC BY-NC 4.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-nc/4.0/
